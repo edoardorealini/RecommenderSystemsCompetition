@@ -95,3 +95,27 @@ class datasetSplitter():
 
     def itemListTest_toString(self, to):
         print("ItemListTest[0:", to, "]: ", self.itemList_testSet[:to])
+
+
+
+def getColdUsers():
+    coldUsers = []
+    path = "data/competition/users/userlist_cold.txt"
+    file = open(path, 'r')
+
+    for line in file:
+        split = line.split()
+        coldUsers.append(int(split[0]))
+
+    return coldUsers
+
+def getUserList():
+    userlist = []
+
+    path = "data/competition/users/userlist_output.txt"
+    file = open(path, 'r')
+
+    for item in file:
+        userlist.append(int(item))
+
+    return userlist

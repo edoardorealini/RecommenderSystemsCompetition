@@ -4,6 +4,8 @@ from Notebooks_utils.data_splitter import train_test_holdout
 from Notebooks_utils.evaluation_function import evaluate_algorithm
 from ParserURM import ParserURM
 
+
+'''
 URM_all = sps.load_npz('data/competition/sparse_URM.npz')
 print("URM correctly loaded from file: data/competition/sparse_URM.npz")
 
@@ -37,6 +39,8 @@ userList_unique = getUserList()
 #userList_unique = list(set(userList))
 
 print(userList_unique)
+'''
+
 
 class TopPopRecommender(object):
 
@@ -54,7 +58,10 @@ class TopPopRecommender(object):
 
         return recommended_items
 
+
+
 # Data already splitted (spero correttamente)
+'''
 
 user_id = np.random.randint(low=0, high=10000)
 
@@ -89,4 +96,7 @@ output = open("output/top_popular.csv", 'w')
 output.write("user_id,item_list\n")
 for user in userList_unique:
     recommended_items = topPop_recommender.recommend(user, at=10)
-    output.write(list_to_output(user, recommended_items))
+    output.write(list_to_output(user, recommended_items)) 
+
+
+'''
