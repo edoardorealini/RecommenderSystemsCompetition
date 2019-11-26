@@ -81,9 +81,17 @@ recommender.fit(shrink=50, topK=100)
 end_time = time.time()
 print("Fit time: {:.2f} sec".format(end_time-start_time))
 
-# evaluation done on half the user pool to speed the things up!
+# NB: generare output solo sugli utenti che non sono cold !
+# per i cold users Usare il top popular trainato su tutta la matrice URM (Senza split)
+
+create_output("ItemCFKNN_secondTry", recommender)
+
+'''
+
 length = len(userList)
 half_users = userList[:int(length/2)]
+
+# evaluation done on half the user pool to speed the things up!
 
 shrink_values = [0, 10, 50, 100]
 k_values = [100, 250, 500, 1000]
@@ -92,7 +100,7 @@ shrink_results = []
 k_results = []
 
 START = time.time()
-'''
+
 for sh in shrink_values:
     print("####################################")
     print("Fitting . . .")
@@ -128,4 +136,3 @@ print("Total time for parameter tuning is {:.2f} minutes".format(total_time))
 print("The best tuning is: \n Shrink = {}\nK = {}".format(best_sh, best_k))
 '''
 
-create_output("ItemCFKNN_secondTry", recommender)
