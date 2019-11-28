@@ -70,32 +70,33 @@ parser.generateURMfromFile(URM_path)
 
 userList = parser.getUserList_unique()
 
-recommender_CF = ItemCFKNNRecommender(URM_all)
+recommender_CF = ItemCFKNNRecommender(URM_train)
 recommender_TopPop = tp.TopPopRecommender()
 
 start_time = time.time()
-print("###  Training model with all data!   ###")
-recommender_CF.fit(shrink=50, topK=100)
+#print("###  Training model with all data!   ###")
+recommender_CF.fit(shrink=25, topK=50, similarity="jaccard")
 end_time = time.time()
 print("Fit time for CF: {:.2f} sec".format(end_time-start_time))
 
 start_time = time.time()
-recommender_TopPop.fit(URM_all)
+recommender_TopPop.fit(URM_train)
 end_time = time.time()
 print("Fit time for TopPop: {:.2f} sec".format(end_time-start_time))
 
 # NB: generare output solo sugli utenti che non sono cold !
 # per i cold users Usare il top popular trainato su tutta la matrice URM (Senza split)
 
-create_output_coldUsers("ItemCFKNN_consideringCold_28-11", firstRecommender=recommender_CF, coldRecommender=recommender_TopPop)
+#create_output_coldUsers(name="ItemCFKNN_consideringCold_28-11-jaccard2", firstRecommender=recommender_CF, coldRecommender=recommender_TopPop)
 
-'''
+
 start_time = time.time()
 evaluate_algorithm_coldUsers(URM_test, recommender_CF, recommender_TopPop, at=10)
 end_time = time.time()
 
-print("Evaluation time: {:.2f} mins".format((end_time-start_time)/60))
+print("\nEvaluation time: {:.2f} mins".format((end_time-start_time)/60))
 
+'''
 
 length = len(userList)
 half_users = userList[:int(length/2)]

@@ -1,0 +1,8 @@
+SIMILARITY PERFORMANCES: 
+(With paramenter values: Shrink = 50.0  |  K = 100)
+
+cosine: 	0.0480
+jaccard:	0.0492 (faster)
+dice: 		0.0483
+tversky:	0.0492
+tanimoto:	0.0492

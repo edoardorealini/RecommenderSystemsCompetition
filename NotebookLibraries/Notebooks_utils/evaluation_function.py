@@ -5,9 +5,13 @@ Created on 21/10/2018
 
 @author: Maurizio Ferrari Dacrema
 """
+from time import sleep
 
 import numpy as np
+import progressbar
 import scipy.sparse as sps
+from tqdm import tqdm
+
 from DataUtils.datasetSplitter import *
 
 
@@ -58,10 +62,10 @@ def evaluate_algorithm(URM_test, recommender_object, userList = getUserList(), a
 
     print("[evaluation] length of user list: ", len(userList))
 
-    for user_id in userList:
+    for user_id in tqdm(userList):
 
-        if user_id % 10000 == 0:
-            print("Evaluated user {} of {}".format(user_id, n_users))
+        #if user_id % 10000 == 0:
+        #    print("Evaluated user {} of {}".format(user_id, n_users))
 
         if user_id != 30910:
             start_pos = URM_test.indptr[user_id]
@@ -117,10 +121,10 @@ def evaluate_algorithm_coldUsers(URM_test, recommender_object, recommender_cold,
 
     print("[evaluation] length of user list: ", len(userList))
 
-    for user_id in userList:
+    for user_id in tqdm(userList):
 
-        if user_id % 10000 == 0:
-            print("Evaluated user {} of {}".format(user_id, n_users))
+        #if user_id % 10000 == 0:
+        #    print("Evaluated user {} of {}".format(user_id, n_users))
 
         if user_id != 30910:
             start_pos = URM_test.indptr[user_id]

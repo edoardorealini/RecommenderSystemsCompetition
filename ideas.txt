@@ -1,0 +1,8 @@
+Idea per sostituire TopPop come fall down:
+
+- Consigliare ai cold users un elenco di item che sono piaciuti ad utenti simili
+- per creare la similarity matrix tra users usare come input la UCM (User Content Matrix)
+
+Sarebbe oppotuno usare questa tecnica anche per gli utenti che hanno poche preferenze
+infatti: è difficile con un collaborative filtering normale calcolare la similarity tra utenti che hanno poco support di dati
+

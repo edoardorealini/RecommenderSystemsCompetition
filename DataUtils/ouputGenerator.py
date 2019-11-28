@@ -1,6 +1,7 @@
 import time
 from DataUtils.datasetSplitter import *
 import os
+from tqdm import tqdm
 
 def getUserList_forOutput():
     userList_file = open("data/competition/alg_sample_submission.csv", 'r')
@@ -37,7 +38,7 @@ def create_output(name, recommender):
     print("[OutputGenerator] starting to generate recommendations")
     start_time = time.time()
 
-    for user in getUserList_forOutput():
+    for user in tqdm(getUserList_forOutput()):
         if user % 5000 == 0:
             print("Recommending to user ", user)
 
@@ -46,6 +47,7 @@ def create_output(name, recommender):
 
     end_time = time.time()
     print("[OutputGenerator] output correctly written on file " + name + ".csv in {:.2f} mins".format((end_time - start_time)/60))
+
 
 
 def create_output_coldUsers(name, firstRecommender, coldRecommender):
@@ -58,10 +60,9 @@ def create_output_coldUsers(name, firstRecommender, coldRecommender):
 
     print("[OutputGenerator] starting to generate recommendations")
 
-    start_time = time.time()
-    for user in getUserList_forOutput():
-        if user % 5000 == 0:
-            print("Recommending to user ", user)
+    for user in tqdm(getUserList_forOutput()):
+        #if user % 5000 == 0:
+        #    print("Recommending to user ", user)
 
         if user in coldUserList:
             recommended_items = coldRecommender.recommend(user, at=10)
@@ -70,6 +71,7 @@ def create_output_coldUsers(name, firstRecommender, coldRecommender):
             recommended_items = firstRecommender.recommend(user, at=10)
 
         output.write(list_to_output(user, recommended_items))
+
     end_time = time.time()
 
     print("[OutputGenerator] output correctly written on file " + name + ".csv in {:.2f} mins".format((end_time - start_time)/60))
