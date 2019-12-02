@@ -119,3 +119,19 @@ def getUserList():
         userlist.append(int(item))
 
     return userlist
+
+def rowSplit(rowString):
+    split = rowString.split(",")
+    split[0] = int(split[0])    # User
+    split[1] = int(split[1])    # item
+    split[2] = float(split[2])  # Rating, Implicit
+    result = tuple(split)
+    return result
+
+def createLists(tuples):
+    userList, itemList, ratingsList = zip(*tuples)
+    userList = list(userList)
+    itemList = list(itemList)
+    ratingsList = list(ratingsList)
+    print("[Parser]: lists from file created and exported")
+    return userList, itemList, ratingsList

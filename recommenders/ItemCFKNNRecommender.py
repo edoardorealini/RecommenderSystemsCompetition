@@ -47,7 +47,7 @@ class ItemCFKNNRecommender(object):
 
         return scores
 
-
+'''
 URM_all = sps.load_npz('data/competition/sparse_URM.npz')
 print("URM correctly loaded from file: data/competition/sparse_URM.npz")
 URM_all = URM_all.tocsr()
@@ -96,7 +96,7 @@ end_time = time.time()
 
 print("\nEvaluation time: {:.2f} mins".format((end_time-start_time)/60))
 
-'''
+
 
 length = len(userList)
 half_users = userList[:int(length/2)]

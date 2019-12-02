@@ -1,8 +1,8 @@
 import numpy as np
 import scipy.sparse as sps
 import time
-from Notebooks_utils.evaluation_function import evaluate_algorithm
-from Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
+from NotebookLibraries.Notebooks_utils.evaluation_function import evaluate_algorithm
+from NotebookLibraries.Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
 from DataUtils.ParserURM import ParserURM
 
 URM_all = sps.load_npz('data/competition/sparse_URM.npz')

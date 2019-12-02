@@ -1,8 +1,12 @@
 Idea per sostituire TopPop come fall down:
+Usare un User Based !
 
 - Consigliare ai cold users un elenco di item che sono piaciuti ad utenti simili
+    - quindi bisogna calcolare la similarity matrix User-User e tramite quella pescare gli user più simili ai cold!
+    - Di conseguenza posso consigliare gli stessi item che ho consigliato al'user simile oppure la lista di item che l'user
+        simile conosce già e in append la list consigliata finchè arribvo a 10 elementi.
 - per creare la similarity matrix tra users usare come input la UCM (User Content Matrix)
+    - magari prima provare solo con quella dell'age che dovrebbe essere più generica e dovremmo avere l'imformazione per tutti
 
-Sarebbe oppotuno usare questa tecnica anche per gli utenti che hanno poche preferenze
+Sarebbe oppotuno usare questa tecnica anche per gli utenti che hanno poche preferenze per rinforzare le prediction
 infatti: è difficile con un collaborative filtering normale calcolare la similarity tra utenti che hanno poco support di dati
-
