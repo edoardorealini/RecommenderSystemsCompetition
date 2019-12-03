@@ -60,6 +60,8 @@ def create_output_coldUsers(name, firstRecommender, coldRecommender):
 
     print("[OutputGenerator] starting to generate recommendations")
 
+    start_time = time.time()
+
     for user in tqdm(getUserList_forOutput()):
         #if user % 5000 == 0:
         #    print("Recommending to user ", user)

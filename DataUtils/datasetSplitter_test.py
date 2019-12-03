@@ -1,4 +1,4 @@
-from DataUtils import datasetSplitter
+from DataUtils.datasetSplitter import datasetSplitter
 import scipy.sparse as sps
 import time
 

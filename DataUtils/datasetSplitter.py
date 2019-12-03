@@ -4,6 +4,9 @@
 #       test set.
 import scipy.sparse as sps
 import random
+
+from tqdm import tqdm
+
 from DataUtils.ParserURM import ParserURM
 
 
@@ -39,13 +42,13 @@ class datasetSplitter():
         print("[DataSplitter] Splitting data . . .")
         counter = 0
         print("Number of unique users: ", len(self.userList_unique))
-        for uniqueUserIndex in range(len(self.userList_unique) - 1):
+        for uniqueUserIndex in tqdm(range(len(self.userList_unique) - 1)):
             startIndex = self.userList.index(self.userList_unique[uniqueUserIndex])
             endIndex = self.userList.index(self.userList_unique[uniqueUserIndex + 1])
 
-            if uniqueUserIndex % 3000 == 0:
-                print("     Splitting status: ", counter*1000, "users computed")
-                counter = counter + 1
+            #if uniqueUserIndex % 3000 == 0:
+            #    print("     Splitting status: ", counter*1000, "users computed")
+            #    counter = counter + 1
 
             elementToRemove = random.randint(startIndex, endIndex - 1)
 
@@ -70,10 +73,14 @@ class datasetSplitter():
                 ones.append(1.0)
             self.URM_train = sps.coo_matrix((ones, (self.userList, self.itemList))).tocsr()
             sps.save_npz("data/competition/URM_train.npz", self.URM_train, compressed=True)
-            print("[DataSplitter] URM_train created and stored correctly in: data/competition/URM_test.npz")
+            print("[DataSplitter] URM_train created and stored correctly in: data/competition/URM_train.npz")
 
         else:
             print("[DataSplitter : ERROR] The number lenght of the user list for the test set is different from the len of the item list!")
+
+        return
+
+    def splitDataBetter(self):
 
         return
 
