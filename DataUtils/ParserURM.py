@@ -8,6 +8,7 @@ class ParserURM():
         self.userList = []
         self.itemList = []
         self.ratingsList = []
+        self.URM_tuples = []
 
 
     def rowSplit(self, rowString):
@@ -34,6 +35,8 @@ class ParserURM():
         for row in URM_file:
             URM_tuples.append(self.rowSplit(row))
 
+        self.URM_tuples = URM_tuples
+
         self.userList, self.itemList, self.ratingsList = self.createLists(URM_tuples)
         self.URM = sps.coo_matrix((self.ratingsList, (self.userList, self.itemList)))
         print("[URM_parser]: URM correctly loaded, use getters to get the correct format and lists")
@@ -59,6 +62,9 @@ class ParserURM():
     # Returns the URM in native coo formats of scipy
     def getURM(self):
         return self.URM
+
+    def getTuples(self):
+        return self.URM_tuples
 
     # Returns the URM in the CSR format
     def getURM_csr(self):

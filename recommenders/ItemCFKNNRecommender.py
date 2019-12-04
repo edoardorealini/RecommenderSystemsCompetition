@@ -60,9 +60,6 @@ URM_train = sps.load_npz('data/competition/URM_train.npz')
 print("URM_train correctly loaded from file: data/competition/URM_train.npz")
 URM_train = URM_train.tocsr()
 
-ICM_all = sps.load_npz('data/competition/sparse_ICM.npz')
-print("ICM_all correctly loaded from path: data/competition/sparse_ICM.npz")
-ICM_all = ICM_all.tocsr()
 
 parser = ParserURM()
 URM_path = "data/competition/data_train.csv"
