@@ -56,6 +56,7 @@ for age in range(1,11):
     URM_Aged = URM_Aged.tocsr()
 
     print("[AgeTopPopGen] reformatting URM")
+    # efficienza di questa riga di codice == STONKS
     URM_Aged = URM_Aged[agedUsers, :]
 
     sps.save_npz("./data/competition/AgeURM/URM_age_"+str(age)+".npz", URM_Aged)

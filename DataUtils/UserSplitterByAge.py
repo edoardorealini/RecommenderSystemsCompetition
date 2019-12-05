@@ -15,7 +15,7 @@ from DataUtils.datasetSplitter import rowSplit, createLists
 UCM_path = "./data/competition/data_UCM_age.csv"
 
 def splitOnAge(UCM_path):
-    UCM_file = open(UCM_path, "r")
+    UCM_file = open(UCM_path, 'r')
 
     age_tuples = []
 
@@ -115,7 +115,7 @@ def getAllUsersByAge():
         file = open("./data/competition/users_by_age.txt", "r")
 
     except:
-        splitOnAge(UCM_path)
+        splitOnAge("./data/competition/data_UCM_age.csv")
         file = open("./data/competition/users_by_age.txt", "r")
 
     usersByAge = ["empty"]

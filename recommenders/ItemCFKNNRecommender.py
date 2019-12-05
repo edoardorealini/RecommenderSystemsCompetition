@@ -84,7 +84,8 @@ print("Fit time for TopPop: {:.2f} sec".format(end_time-start_time))
 # NB: generare output solo sugli utenti che non sono cold !
 # per i cold users Usare il top popular trainato su tutta la matrice URM (Senza split)
 
-create_output_coldUsers(name="ItemCFKNN_consideringCold_03-12", firstRecommender=recommender_CF, coldRecommender=recommender_TopPop)
+#create_output_coldUsers(name="ItemCFKNN_consideringCold_03-12", firstRecommender=recommender_CF, coldRecommender=recommender_TopPop)
+create_output_coldUsers_Age(name="ItemCFKNN_consideringCold+AGE_05-12", firstRecommender=recommender_CF)
 
 '''
 
