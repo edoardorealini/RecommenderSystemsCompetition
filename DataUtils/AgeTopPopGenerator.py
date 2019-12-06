@@ -57,6 +57,7 @@ for age in range(1,11):
 
     print("[AgeTopPopGen] reformatting URM")
     # efficienza di questa riga di codice == STONKS
+    # Keeps only the lines of the URM that are in the list agedUsers !!
     URM_Aged = URM_Aged[agedUsers, :]
 
     sps.save_npz("./data/competition/AgeURM/URM_age_"+str(age)+".npz", URM_Aged)

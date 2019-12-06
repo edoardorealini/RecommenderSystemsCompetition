@@ -23,6 +23,7 @@ class datasetSplitter():
         self.itemList_testSet = []
         self.userList_trainSet = []
         self.itemList_trainSet = []
+        self.URM_tuples = []
 
     def loadURMdata(self, path):
         parser = ParserURM()
@@ -35,6 +36,7 @@ class datasetSplitter():
         print("[DataSplitter] Loaded user list (unique)")
         self.itemList_unique = parser.getItemList_unique()
         print("[DataSplitter] Loaded user list (unique)")
+        self.URM_tuples = parser.getTuples()
 
     def splitData(self):
         # from the complete lists we have to exclude one random interaction per each user
@@ -45,10 +47,6 @@ class datasetSplitter():
         for uniqueUserIndex in tqdm(range(len(self.userList_unique) - 1)):
             startIndex = self.userList.index(self.userList_unique[uniqueUserIndex])
             endIndex = self.userList.index(self.userList_unique[uniqueUserIndex + 1])
-
-            #if uniqueUserIndex % 3000 == 0:
-            #    print("     Splitting status: ", counter*1000, "users computed")
-            #    counter = counter + 1
 
             elementToRemove = random.randint(startIndex, endIndex - 1)
 
@@ -81,8 +79,63 @@ class datasetSplitter():
         return
 
     def splitDataBetter(self):
+        # Use tuples directly !
+        # Iterate on tuples, same algorithm as before, just avoid using pop on the list, too slow implementation
+        # IDEA: for a set of users get one randomly and copy his tuple into a list this generates the test set
+        # for the train set, the tuples not copied for the test set should be copied into another list to then form the train set
+        tuples = self.URM_tuples
 
-        return
+        test_tuples = []
+        train_tuples = []
+
+        # save the indexes of the popped items (in order to ignore them when creating the train set!)
+        popped_users = []
+        # initialization to the first user id in the list
+        last_userID = tuples[0][0]
+        last_user_index = 0
+        last_user = (last_userID, last_user_index)
+
+        #the goal is to overwrite the files URM_test.npz and URM_train.npz
+        # this for creates the train split
+        for index in tqdm(range(len(tuples))):
+            # t is the tuple !
+            # in t[0] is stored the user id, in t[1] is stored the item id
+            # each tuple represents an interaction of the user t[0] with the item t[1]
+            # in one linear scan,
+            user = tuples[index][0]
+
+            if user != last_userID:
+                # this case means that we fourd a user that is not been encountered yet !
+                # in index we have the index of the current tuple (the one with the new user)
+                # in last_user_index we have the index of the last user
+                rand_index = random.randint(last_user_index, index - 1)
+
+                test_tuples.append(tuples[rand_index])
+                popped_users.append(rand_index)
+
+                for i in range(last_user_index, index):
+                    if i != rand_index:
+                        train_tuples.append(tuples[i])
+
+                last_userID = user
+                last_user_index = index
+
+
+        print(len(train_tuples) + len(test_tuples))
+
+        test_users, test_items, test_ratings = zip(*test_tuples)
+        train_users, train_items, train_ratings = zip(*train_tuples)
+
+        print("[Splitter] Creating matrices")
+        URM_train = sps.coo_matrix((train_ratings, (train_users, train_items))).tocsr()
+        URM_test = sps.coo_matrix((test_ratings, (test_users, test_items))).tocsr()
+
+        print("[Splitter] Saving matrices on files")
+
+        sps.save_npz("./data/competition/URM_test.npz", URM_test, compressed=True)
+        sps.save_npz("./data/competition/URM_train.npz", URM_train, compressed=True)
+
+        return URM_train, URM_test
 
 
     def userList_toString(self, to):

@@ -1,6 +1,11 @@
 Idea per sostituire TopPop come fall down:
 Usare un User Based !
 
+FATTO:
+    Mettere TopPop su cold user
+    Mettere TopPop age based su cold users
+
+
 - Consigliare ai cold users un elenco di item che sono piaciuti ad utenti simili
     - quindi bisogna calcolare la similarity matrix User-User e tramite quella pescare gli user più simili ai cold!
     - Di conseguenza posso consigliare gli stessi item che ho consigliato al'user simile oppure la lista di item che l'user
@@ -10,3 +15,10 @@ Usare un User Based !
 
 Sarebbe oppotuno usare questa tecnica anche per gli utenti che hanno poche preferenze per rinforzare le prediction
 infatti: è difficile con un collaborative filtering normale calcolare la similarity tra utenti che hanno poco support di dati
+
+
+TODO NEXT:
+    - Migliorare il TopPop Age based usando anche dati che riguardano la posizione dell'utente
+
+    - Arricchire la URM di partenza da dare al ItemCFKNN usando un content based
+        aggiungere corrispondenze usando user based, ad utenti con poche interactions (tipo sotto un certo valore di threshold)

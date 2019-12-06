@@ -47,7 +47,7 @@ class ItemCFKNNRecommender(object):
 
         return scores
 
-
+'''
 URM_all = sps.load_npz('data/competition/sparse_URM.npz')
 print("URM correctly loaded from file: data/competition/sparse_URM.npz")
 URM_all = URM_all.tocsr()
@@ -87,7 +87,7 @@ print("Fit time for TopPop: {:.2f} sec".format(end_time-start_time))
 #create_output_coldUsers(name="ItemCFKNN_consideringCold_03-12", firstRecommender=recommender_CF, coldRecommender=recommender_TopPop)
 create_output_coldUsers_Age(name="ItemCFKNN_consideringCold+AGE_05-12", firstRecommender=recommender_CF)
 
-'''
+
 
 start_time = time.time()
 evaluate_algorithm_coldUsers(URM_test, recommender_CF, recommender_TopPop, at=10)
