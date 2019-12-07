@@ -1,3 +1,4 @@
+from NotebookLibraries.Notebooks_utils.evaluation_function import evaluate_algorithm
 from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
 from DataUtils.datasetSplitter import datasetSplitter
 
@@ -8,5 +9,19 @@ URM_path = "./data/competition/data_train.csv"
 
 splitter = datasetSplitter()
 splitter.loadURMdata(URM_path)
-
 URM_train, URM_test = splitter.splitDataBetter()
+
+# now that we can split data in a decent timing, we can start the evaluation of the best shrink parameter, keeping k = 10
+
+shrink_values = [30, 35, 40, 45, 50, 55, 60]
+results = []
+
+# Testing with a single single split value!
+for sh in shrink_values:
+    recommender = ItemCFKNNRecommender(URM_train)
+    recommender.fit(topK=10, shrink=sh, normalize=True, similarity="jaccard")
+    result = evaluate_algorithm(URM_test, recommender, at=10)
+    results.append(result)
+
+for r in results:
+    print(r)

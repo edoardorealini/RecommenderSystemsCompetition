@@ -18,7 +18,7 @@ class ItemCFKNNRecommender(object):
         similarity_object = Compute_Similarity_Python(self.URM, shrink=shrink,
                                                       topK=topK, normalize=normalize,
                                                       similarity = similarity)
-
+        print("[ItemCFKNNRecommender] Fitting . . .")
         self.W_sparse = similarity_object.compute_similarity()
 
 

@@ -93,11 +93,11 @@ class datasetSplitter():
         # initialization to the first user id in the list
         last_userID = tuples[0][0]
         last_user_index = 0
-        last_user = (last_userID, last_user_index)
 
-        #the goal is to overwrite the files URM_test.npz and URM_train.npz
+        # the goal is to overwrite the files URM_test.npz and URM_train.npz
         # this for creates the train split
-        for index in tqdm(range(len(tuples))):
+        print("[Splitter] Splitting . . .")
+        for index in range(len(tuples)):
             # t is the tuple !
             # in t[0] is stored the user id, in t[1] is stored the item id
             # each tuple represents an interaction of the user t[0] with the item t[1]
@@ -119,9 +119,6 @@ class datasetSplitter():
 
                 last_userID = user
                 last_user_index = index
-
-
-        print(len(train_tuples) + len(test_tuples))
 
         test_users, test_items, test_ratings = zip(*test_tuples)
         train_users, train_items, train_ratings = zip(*train_tuples)
