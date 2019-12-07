@@ -13,9 +13,13 @@ URM_train, URM_test = splitter.splitDataBetter()
 
 # now that we can split data in a decent timing, we can start the evaluation of the best shrink parameter, keeping k = 10
 
-shrink_values = [30, 35, 40, 45, 50, 55, 60]
+shrink_values = []
 results = []
 
+for shrink in range(30, 41):
+    shrink_values.append(shrink)
+
+print(shrink_values)
 # Testing with a single single split value!
 for sh in shrink_values:
     recommender = ItemCFKNNRecommender(URM_train)

@@ -97,6 +97,7 @@ class datasetSplitter():
         # the goal is to overwrite the files URM_test.npz and URM_train.npz
         # this for creates the train split
         print("[Splitter] Splitting . . .")
+
         for index in range(len(tuples)):
             # t is the tuple !
             # in t[0] is stored the user id, in t[1] is stored the item id
@@ -105,7 +106,7 @@ class datasetSplitter():
             user = tuples[index][0]
 
             if user != last_userID:
-                # this case means that we fourd a user that is not been encountered yet !
+                # this case means that we found a user that is not been encountered yet !
                 # in index we have the index of the current tuple (the one with the new user)
                 # in last_user_index we have the index of the last user
                 rand_index = random.randint(last_user_index, index - 1)
