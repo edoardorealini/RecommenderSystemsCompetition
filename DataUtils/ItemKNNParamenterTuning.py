@@ -16,7 +16,7 @@ URM_train, URM_test = splitter.splitDataBetter()
 shrink_values = []
 results = []
 
-for shrink in range(30, 41):
+for shrink in range(15, 26):
     shrink_values.append(shrink)
 
 print(shrink_values)
@@ -27,5 +27,8 @@ for sh in shrink_values:
     result = evaluate_algorithm(URM_test, recommender, at=10)
     results.append(result)
 
+values = range(15, 26)
+i = 0
 for r in results:
-    print(r)
+    print(values[i], r)
+    i += 1
