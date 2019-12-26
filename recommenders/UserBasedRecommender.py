@@ -3,8 +3,7 @@
     This is a User Based Recommender made for the evaluation of cold users
 
 '''
-import numpy as np
-from NotebookLibraries.Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
+from Base import Compute_Similarity_Python
 
 
 class UserBasedRecommender():

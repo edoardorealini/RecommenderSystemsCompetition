@@ -3,6 +3,7 @@ import scipy.sparse as sps
 import numpy as np
 from DataUtils.ParserURM import ParserURM
 from DataUtils.ouputGenerator import *
+from Notebooks_utils.evaluation_function import evaluate_algorithm, evaluate_algorithm_coldUsers, evaluate_algorithm_original
 
 
 class UserCFKNNRecommender(object):
@@ -10,7 +11,7 @@ class UserCFKNNRecommender(object):
     def __init__(self, URM):
         self.URM = URM
 
-    def fit(self, topK=50, shrink=100, normalize=True, similarity="cosine"):
+    def fit(self, topK=10, shrink=50, normalize=False, similarity="jaccard"):
         similarity_object = Compute_Similarity_Python(self.URM.T, shrink=shrink,
                                                       topK=topK, normalize=normalize,
                                                       similarity=similarity)
@@ -53,17 +54,9 @@ URM_train = sps.load_npz('data/competition/URM_train.npz')
 print("URM_train correctly loaded from file: data/competition/URM_train.npz")
 URM_train = URM_train.tocsr()
 
-ICM_all = sps.load_npz('data/competition/sparse_ICM.npz')
-print("ICM_all correctly loaded from path: data/competition/sparse_ICM.npz")
-ICM_all = ICM_all.tocsr()
-
-parser = ParserURM()
-URM_path = "data/competition/data_train.csv"
-parser.generateURMfromFile(URM_path)
-
-userList = parser.getUserList_unique()
-
 recommender = UserCFKNNRecommender(URM_train)
+
+'''
 
 start_time = time.time()
 recommender.fit(shrink=10, topK=750)
@@ -72,9 +65,8 @@ print("Fit time: {:.2f} sec".format(end_time-start_time))
 
 create_output("UserCFKNN", recommender)
 
-'''
-sh = 50
-k = 100
+sh = 20
+k = 10
 
 start_time = time.time()
 recommender.fit(shrink=sh, topK=k)
@@ -83,60 +75,34 @@ print("Fit time: {:.2f} sec".format(end_time-start_time))
 
 start_time = time.time()
 print("Evaluating with shrink value = {} and topK = {}".format(sh, k))
-result = evaluate_algorithm(URM_test, recommender, userList, at=10)
+result = evaluate_algorithm_original(URM_test, recommender, at=10)
 end_time = time.time()
 print("Evaluation time: {:.2f} minutes".format((end_time-start_time)/60))
+'''
 
+# evaluation done on half the user pool to speed the things up
+# Best Shrink value is 2 with one single split evaluation
 
-# evaluation done on half the user pool to speed the things up!
-length = len(userList)
-half_users = userList[:int(length/2)]
-
-shrink_values = [0, 10, 50, 100, 200]
-k_values = [500, 750, 1000]
-
+shrink_values = [2, 3, 5, 7, 8, 9]
 shrink_results = []
-k_results = []
 
 START = time.time()
-
-for tk in k_values:
-    print("####################################")
-    print("Fitting . . .")
-    recommender.fit(shrink=10, topK=tk)
-    start_time = time.time()
-    print("Evaluating with K value = ", tk)
-    result = evaluate_algorithm(URM_test, recommender, half_users, at=10)
-    end_time = time.time()
-    print("Evaluation time: {:.2f} minutes".format((end_time-start_time)/60))
-    k_results.append(result["MAP"])
-
-best_k = k_values[k_results.index(max(k_results))]
 
 for sh in shrink_values:
     print("####################################")
     print("Fitting . . .")
-    recommender.fit(shrink=sh, topK=best_k)
+    recommender.fit(shrink=sh, topK=10)
     start_time = time.time()
     print("Evaluating with shrink value = ", sh)
-    result = evaluate_algorithm(URM_test, recommender, half_users, at=10)
+    result = evaluate_algorithm_original(URM_test, recommender, at=10)
     end_time = time.time()
     print("Evaluation time: {:.2f} minutes".format((end_time-start_time)/60))
     shrink_results.append(result["MAP"])
 
-
-best_sh = max(shrink_results)
-
-
 END = time.time()
-
-best_k = k_values[k_results.index(max(k_results))]
-best_sh = shrink_values[shrink_results.index((max(shrink_results)))]
 
 total_time = (END - START)/60
 
 print("Total time for parameter tuning is {:.2f} minutes".format(total_time))
-print("The best tuning is: \n Shrink = {}\nK = {}".format(best_sh, best_k))
 
-'''
 

@@ -1,8 +1,8 @@
 import numpy as np
 import scipy.sparse as sps
 import time
-from NotebookLibraries.Notebooks_utils.evaluation_function import evaluate_algorithm
-from NotebookLibraries.Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
+from Notebooks_utils.evaluation_function import evaluate_algorithm, evaluate_algorithm_original
+from Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
 from DataUtils.ParserURM import ParserURM
 
 URM_all = sps.load_npz('data/competition/sparse_URM.npz')
@@ -27,14 +27,15 @@ class ItemCBFKNNRecommender(object):
         self.URM = URM
         self.ICM = ICM
 
-    def fit(self, topK=50, shrink=100, normalize=True, similarity="cosine"):
+    def fit(self, topK=10, shrink=10, normalize=False, similarity="jaccard"):
+        print("[CBFRecommender] Fitting model . . .")
         similarity_object = Compute_Similarity_Python(self.ICM.T, shrink=shrink,
                                                       topK=topK, normalize=normalize,
                                                       similarity=similarity)
 
         self.W_sparse = similarity_object.compute_similarity()
 
-    def recommend(self, user_id, at=1, exclude_seen=True):
+    def recommend(self, user_id, at=10, exclude_seen=True):
         # compute the scores using the dot product
         user_profile = self.URM[user_id]
         scores = user_profile.dot(self.W_sparse).toarray().ravel()
@@ -57,20 +58,21 @@ class ItemCBFKNNRecommender(object):
 
         return scores
 
-parser = ParserURM()
-URM_path = "data/competition/data_train.csv"
-parser.generateURMfromFile(URM_path)
 
-userList = parser.getUserList_unique()
+#parser = ParserURM()
+#URM_path = "data/competition/data_train.csv"
+#parser.generateURMfromFile(URM_path)
+
+#userList = parser.getUserList_unique()
 
 CBFRecommmender = ItemCBFKNNRecommender(URM=URM_train, ICM=ICM_all)
 start_time = time.time()
-CBFRecommmender.fit(shrink=0.0, topK=100)
+CBFRecommmender.fit(shrink=10, topK=10)
 end_time = time.time()
 print("Fit time: {:.2f} sec".format(end_time-start_time))
 
 start_time = time.time()
-evaluate_algorithm(URM_test, CBFRecommmender, userList)
+evaluate_algorithm_original(URM_test, CBFRecommmender, at=10)
 end_time = time.time()
 print("Evaluation time: {:.2f} sec".format(end_time-start_time))
 

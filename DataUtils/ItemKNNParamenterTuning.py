@@ -1,4 +1,4 @@
-from NotebookLibraries.Notebooks_utils.evaluation_function import evaluate_algorithm
+from Notebooks_utils import evaluate_algorithm
 from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
 from DataUtils.datasetSplitter import datasetSplitter
 

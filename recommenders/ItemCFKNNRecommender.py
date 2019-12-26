@@ -1,9 +1,7 @@
-from NotebookLibraries.Notebooks_utils.evaluation_function import evaluate_algorithm_coldUsers
-from NotebookLibraries.Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
-import scipy.sparse as sps
+from Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
 import numpy as np
-from DataUtils.ParserURM import ParserURM
 from DataUtils.ouputGenerator import *
+from Notebooks_utils.evaluation_function import evaluate_algorithm_coldUsers, evaluate_algorithm_original
 from recommenders import TopPopRecommender as tp
 
 
@@ -13,7 +11,7 @@ class ItemCFKNNRecommender(object):
         self.URM = URM
 
 
-    def fit(self, topK=50, shrink=100, normalize=True, similarity="cosine"):
+    def fit(self, topK=50, shrink=100, normalize=False, similarity="cosine"):
 
         similarity_object = Compute_Similarity_Python(self.URM, shrink=shrink,
                                                       topK=topK, normalize=normalize,
@@ -67,7 +65,7 @@ parser.generateURMfromFile(URM_path)
 
 userList = parser.getUserList_unique()
 
-recommender_CF = ItemCFKNNRecommender(URM_all)
+recommender_CF = ItemCFKNNRecommender(URM_train)
 recommender_TopPop = tp.TopPopRecommender()
 
 start_time = time.time()
@@ -83,7 +81,12 @@ print("Fit time for TopPop: {:.2f} sec".format(end_time-start_time))
 
 # NB: generare output solo sugli utenti che non sono cold !
 # per i cold users Usare il top popular trainato su tutta la matrice URM (Senza split)
+start_time = time.time()
+evaluate_algorithm_coldUsers(URM_test, recommender_CF, recommender_TopPop, at=10)
+evaluate_algorithm_original(URM_test, recommender_CF,  at=10)
+end_time = time.time()
 
+print("\nEvaluation time: {:.2f} mins".format((end_time-start_time)/60))
 #create_output_coldUsers(name="ItemCFKNN_consideringCold_03-12", firstRecommender=recommender_CF, coldRecommender=recommender_TopPop)
 create_output_coldUsers_Age(name="ItemCFKNN_consideringCold+AGE_07-12_sh28", firstRecommender=recommender_CF)
 
