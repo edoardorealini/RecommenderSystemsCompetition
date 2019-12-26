@@ -47,7 +47,7 @@ def MAP(is_relevant, relevant_items):
     return map_score
 
 def evaluate_algorithm_original(URM_test, recommender_object, at=10):
-
+    print("Evaluating algorithm with original evaluator")
     cumulative_precision = 0.0
     cumulative_recall = 0.0
     cumulative_MAP = 0.0
