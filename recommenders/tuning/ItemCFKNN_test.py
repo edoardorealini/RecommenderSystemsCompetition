@@ -47,7 +47,7 @@ end_time = time.time()
 
 print("\nEvaluation time: {:.2f} mins".format((end_time-start_time)/60))
 #create_output_coldUsers(name="ItemCFKNN_consideringCold_03-12", firstRecommender=recommender_CF, coldRecommender=recommender_TopPop)
-create_output_coldUsers_Age(name="ItemCFKNN_consideringCold+AGE_07-12_sh28", firstRecommender=recommender_CF)
+create_output_coldUsers_Age(output_name="ItemCFKNN_consideringCold+AGE_07-12_sh28", recommender=recommender_CF)
 
 '''
 

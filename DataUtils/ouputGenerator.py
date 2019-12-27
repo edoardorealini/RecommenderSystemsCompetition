@@ -113,10 +113,10 @@ def recommendTopPopOnAge(age):
     return list_of_recommends
 
 
-def create_output_coldUsers_Age(name, firstRecommender):
+def create_output_coldUsers_Age(output_name, recommender):
     coldUserList = getColdUsers()
 
-    abspath = os.path.abspath("output/" + name + ".csv")
+    abspath = os.path.abspath("output/" + output_name + ".csv")
     output = open(abspath, 'w')
 
     output.write("user_id,item_list\n")
@@ -127,18 +127,14 @@ def create_output_coldUsers_Age(name, firstRecommender):
     start_time = time.time()
 
     for user in tqdm(getUserList_forOutput()):
-        #if user % 5000 == 0:
-        #    print("Recommending to user ", user)
-
         if user in coldUserList:
             recommended_items = recommendTopPopOnAge(getUserAge(user))
 
-
         else:
-            recommended_items = firstRecommender.recommend(user, at=10)
+            recommended_items = recommender.recommend(user, at=10)
 
         output.write(list_to_output(user, recommended_items))
 
     end_time = time.time()
     print("[OutputGenerator] output generated considering age when recommending topPop!")
-    print("[OutputGenerator] output correctly written on file " + name + ".csv in {:.2f} mins".format((end_time - start_time)/60))
+    print("[OutputGenerator] output correctly written on file " + output_name + ".csv in {:.2f} mins".format((end_time - start_time) / 60))
