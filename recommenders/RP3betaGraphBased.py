@@ -24,7 +24,7 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             self.beta, self.min_rating, self.topK,
             self.implicit, self.normalize_similarity)
 
-    def fit(self, alpha=1., beta=0.6, min_rating=0, topK=10, implicit=True, normalize_similarity=False):
+    def fit(self, alpha=0.5, beta=0.2, min_rating=0, topK=10, implicit=True, normalize_similarity=False):
         self.alpha = alpha
         self.beta = beta
         self.min_rating = min_rating
@@ -169,21 +169,3 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
         scores[user_profile] = -np.inf
 
         return scores
-
-
-URM_all = sps.load_npz('data/competition/sparse_URM.npz')
-print("URM correctly loaded from file: data/competition/sparse_URM.npz")
-URM_all = URM_all.tocsr()
-
-URM_test = sps.load_npz('data/competition/URM_test.npz')
-print("URM_test correctly loaded from file: data/competition/URM_test.npz")
-URM_test = URM_test.tocsr()
-
-URM_train = sps.load_npz('data/competition/URM_train.npz')
-print("URM_train correctly loaded from file: data/competition/URM_train.npz")
-URM_train = URM_train.tocsr()
-
-recommender = RP3betaRecommender(URM_train)
-recommender.fit(topK=10, normalize_similarity=False, implicit=True, alpha=0.5, beta=0.5 )
-
-evaluate_algorithm_original(URM_test, recommender, at=10)

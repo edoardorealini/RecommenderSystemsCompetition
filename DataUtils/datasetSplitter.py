@@ -63,14 +63,18 @@ class datasetSplitter():
 
             print(ones[:10])
             self.URM_test = sps.coo_matrix((ones, (self.userList_testSet, self.itemList_testSet))).tocsr()
-            sps.save_npz("data/competition/URM_test.npz", self.URM_test, compressed=True)
+            sps.save_npz("C:/Users/Utente/Desktop/RecSys-Competition-2019/DataUtils/data/competition/URM_test.npz", self.URM_test, compressed=True)
+            sps.save_npz("C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/URM_test.npz",
+                         self.URM_test, compressed=True)
             print("[DataSplitter] URM_test created and stored correctly in: data/competition/URM_test.npz")
 
             del ones[:]
             for i in self.userList:
                 ones.append(1.0)
             self.URM_train = sps.coo_matrix((ones, (self.userList, self.itemList))).tocsr()
-            sps.save_npz("data/competition/URM_train.npz", self.URM_train, compressed=True)
+            sps.save_npz("C:/Users/Utente/Desktop/RecSys-Competition-2019/DataUtils/data/competition/URM_train.npz", self.URM_train, compressed=True)
+            sps.save_npz("C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/URM_train.npz",
+                         self.URM_train, compressed=True)
             print("[DataSplitter] URM_train created and stored correctly in: data/competition/URM_train.npz")
 
         else:
@@ -130,8 +134,12 @@ class datasetSplitter():
 
         print("[Splitter] Saving matrices on files")
 
-        sps.save_npz("./data/competition/URM_test.npz", URM_test, compressed=True)
-        sps.save_npz("./data/competition/URM_train.npz", URM_train, compressed=True)
+        sps.save_npz("C:/Users/Utente/Desktop/RecSys-Competition-2019/DataUtils/data/competition/URM_test.npz", URM_test, compressed=True)
+        sps.save_npz("C:/Users/Utente/Desktop/RecSys-Competition-2019/DataUtils/data/competition/URM_train.npz", URM_train, compressed=True)
+
+        sps.save_npz("C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/URM_test.npz", URM_test, compressed=True)
+        sps.save_npz("C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/URM_train.npz", URM_train, compressed=True)
+
 
         return URM_train, URM_test
 
@@ -170,7 +178,7 @@ def getColdUsers():
 def getUserList():
     userlist = []
 
-    path = "data/competition/users/userlist_output.txt"
+    path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/users/userlist_output.txt"
     file = open(path, 'r')
 
     for item in file:

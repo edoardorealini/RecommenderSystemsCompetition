@@ -3,7 +3,7 @@
     This is a User Based Recommender made for the evaluation of cold users
 
 '''
-from Base import Compute_Similarity_Python
+from Base.Similarity import Compute_Similarity_Python
 
 
 class UserBasedRecommender():

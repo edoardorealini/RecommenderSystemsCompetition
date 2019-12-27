@@ -12,7 +12,7 @@ splitter.userListUnique_toString(to=30)
 splitter.itemListUnique_toString(to=30)
 
 start_time = time.time()
-splitter.splitData()
+splitter.splitDataBetter()
 end_time = time.time()
 print("Split time: {:.2f} min".format((end_time-start_time)/60))
 

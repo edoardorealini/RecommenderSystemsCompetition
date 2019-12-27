@@ -93,6 +93,7 @@ def evaluate_algorithm_original(URM_test, recommender_object, at=10):
 
     return result_dict
 
+
 def evaluate_algorithm(URM_test, recommender_object, userList = getUserList(), at=10):
 
     cumulative_precision = 0.0
