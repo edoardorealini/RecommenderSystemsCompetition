@@ -166,7 +166,12 @@ class SLIMElasticNetRecommender(BaseSimilarityMatrixRecommender):
     def load_model(self, name, path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/models/ElasticNet"):
         print("[SLIMElasticNet] Loading model from file " + path + "/" + name + ".npz")
         self.W_sparse = sps.load_npz(path + "/" + name + ".npz")
+        print("Loaded model correctly")
         self.W_sparse = self.W_sparse.tocsr()
+
+    def get_model(self):
+        return self.W_sparse
+
 
 
 import multiprocessing
@@ -277,3 +282,4 @@ class MultiThreadSLIM_ElasticNet(SLIMElasticNetRecommender, BaseSimilarityMatrix
         scores[user_profile] = -np.inf
 
         return scores
+
