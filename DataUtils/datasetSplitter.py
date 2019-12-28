@@ -166,7 +166,7 @@ class datasetSplitter():
 
 def getColdUsers():
     coldUsers = []
-    path = "data/competition/users/userlist_cold.txt"
+    path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/data/competition/users/userlist_cold.txt"
     file = open(path, 'r')
 
     for line in file:

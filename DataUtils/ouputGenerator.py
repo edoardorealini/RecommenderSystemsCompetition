@@ -6,7 +6,7 @@ from DataUtils.UserSplitterByAge import *
 
 
 def getUserList_forOutput():
-    userList_file = open("data/competition/alg_sample_submission.csv", 'r')
+    userList_file = open("C:/Users/Utente/Desktop/RecSys-Competition-2019/data/competition/alg_sample_submission.csv", 'r')
 
     def rowSplit(rowString):
         split = rowString.split(",")
@@ -100,7 +100,7 @@ def recommendTopPopOnAge(age):
 
     list_of_recommends = []
 
-    file = open("./data/competition/recommends_by_age.txt", "r")
+    file = open("C:/Users/Utente/Desktop/RecSys-Competition-2019/data/competition/recommends_by_age.txt", "r")
 
     for line in file:
         line = line.replace("\n", "")
@@ -116,7 +116,8 @@ def recommendTopPopOnAge(age):
 def create_output_coldUsers_Age(output_name, recommender):
     coldUserList = getColdUsers()
 
-    abspath = os.path.abspath("output/" + output_name + ".csv")
+    # abspath = os.path.abspath("output/" + output_name + ".csv")
+    abspath = "C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/output/" + output_name + ".csv"
     output = open(abspath, 'w')
 
     output.write("user_id,item_list\n")

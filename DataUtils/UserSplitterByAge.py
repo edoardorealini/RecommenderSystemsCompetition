@@ -12,7 +12,7 @@ import scipy.sparse as sps
 from tqdm import tqdm
 from DataUtils.datasetSplitter import rowSplit, createLists
 
-UCM_path = "./data/competition/data_UCM_age.csv"
+UCM_path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/data/competition/data_UCM_age.csv"
 
 def splitOnAge(UCM_path):
     UCM_file = open(UCM_path, 'r')
@@ -75,7 +75,7 @@ def splitOnAge(UCM_path):
     users_by_age.append(ten)
     print(users_by_age[1])
 
-    file = open("./data/competition/users_by_age.txt", 'w')
+    file = open("C:/Users/Utente/Desktop/RecSys-Competition-2019/data/competition/users_by_age.txt", 'w')
 
     for age in tqdm(range(1,11)):
         line = ""
@@ -112,11 +112,11 @@ def readUserLine(line):
 def getAllUsersByAge():
 
     try:
-        file = open("./data/competition/users_by_age.txt", "r")
+        file = open("C:/Users/Utente/Desktop/RecSys-Competition-2019/data/competition/users_by_age.txt", "r")
 
     except:
-        splitOnAge("./data/competition/data_UCM_age.csv")
-        file = open("./data/competition/users_by_age.txt", "r")
+        splitOnAge("C:/Users/Utente/Desktop/RecSys-Competition-2019/data/competition/data_UCM_age.csv")
+        file = open("C:/Users/Utente/Desktop/RecSys-Competition-2019/data/competition/users_by_age.txt", "r")
 
     usersByAge = ["empty"]
 

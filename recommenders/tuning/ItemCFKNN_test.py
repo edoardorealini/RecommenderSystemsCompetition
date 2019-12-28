@@ -3,7 +3,7 @@ import numpy as np
 from DataUtils.ouputGenerator import *
 from Notebooks_utils.evaluation_function import evaluate_algorithm_coldUsers, evaluate_algorithm_original
 from recommenders import TopPopRecommender as tp
-from recommenders import ItemCFKNNRecommender
+from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
 
 URM_all = sps.load_npz('C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/sparse_URM.npz')
 print("URM correctly loaded from file: data/competition/sparse_URM.npz")
@@ -19,7 +19,7 @@ URM_train = URM_train.tocsr()
 
 
 parser = ParserURM()
-URM_path = "data/competition/data_train.csv"
+URM_path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/data/competition/data_train.csv"
 parser.generateURMfromFile(URM_path)
 
 userList = parser.getUserList_unique()
@@ -41,13 +41,13 @@ print("Fit time for TopPop: {:.2f} sec".format(end_time-start_time))
 # NB: generare output solo sugli utenti che non sono cold !
 # per i cold users Usare il top popular trainato su tutta la matrice URM (Senza split)
 start_time = time.time()
-evaluate_algorithm_coldUsers(URM_test, recommender_CF, recommender_TopPop, at=10)
+# evaluate_algorithm_coldUsers(URM_test, recommender_CF, recommender_TopPop, at=10)
 evaluate_algorithm_original(URM_test, recommender_CF,  at=10)
 end_time = time.time()
 
 print("\nEvaluation time: {:.2f} mins".format((end_time-start_time)/60))
-#create_output_coldUsers(name="ItemCFKNN_consideringCold_03-12", firstRecommender=recommender_CF, coldRecommender=recommender_TopPop)
-create_output_coldUsers_Age(output_name="ItemCFKNN_consideringCold+AGE_07-12_sh28", recommender=recommender_CF)
+# create_output_coldUsers(name="ItemCFKNN_consideringCold_03-12", firstRecommender=recommender_CF, coldRecommender=recommender_TopPop)
+# create_output_coldUsers_Age(output_name="ItemCFKNN_consideringCold+AGE_07-12_sh28", recommender=recommender_CF)
 
 '''
 
