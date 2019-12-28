@@ -135,6 +135,11 @@ class SLIMElasticNetRecommender(BaseSimilarityMatrixRecommender):
         self.W_sparse = sps.csr_matrix((values[:numCells], (rows[:numCells], cols[:numCells])),
                                        shape=(n_items, n_items), dtype=np.float32)
 
+    def compute_score(self, user_id):
+        user_profile = self.URM[user_id]
+        scores = user_profile.dot(self.W_sparse).toarray().ravel()
+        return scores
+
     def recommend(self, user_id, at=None, exclude_seen=True):
         # compute the scores using the dot product
         user_profile = self.URM[user_id]

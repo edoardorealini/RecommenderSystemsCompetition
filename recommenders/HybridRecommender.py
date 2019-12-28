@@ -13,7 +13,6 @@ class HybridRecommender(SimilarityMatrixRecommender):
 
     RECOMMENDER_NAME = "ItemKNNSimilarityHybridRecommender"
 
-
     def __init__(self, URM_train, Similarity_1, Similarity_2, Similarity_3, sparse_weights=True):
         self.URM = URM_train
         super(HybridRecommender, self).__init__()

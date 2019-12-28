@@ -10,7 +10,6 @@ class ItemCFKNNRecommender(object):
     def __init__(self, URM):
         self.URM = URM
 
-
     def fit(self, topK=10, shrink=28, normalize=False, similarity="jaccard"):
 
         similarity_object = Compute_Similarity_Python(self.URM, shrink=shrink,
@@ -19,6 +18,10 @@ class ItemCFKNNRecommender(object):
         print("[ItemCFKNNRecommender] Fitting with parameters: topK={}, shrink={}".format(topK,shrink))
         self.W_sparse = similarity_object.compute_similarity()
 
+    def compute_score(self, user_id):
+        user_profile = self.URM[user_id]
+        scores = user_profile.dot(self.W_sparse).toarray().ravel()
+        return scores
 
     def recommend(self, user_id, at=None, exclude_seen=True):
         # compute the scores using the dot product
@@ -32,7 +35,6 @@ class ItemCFKNNRecommender(object):
         ranking = scores.argsort()[::-1]
 
         return ranking[:at]
-
 
     def filter_seen(self, user_id, scores):
 

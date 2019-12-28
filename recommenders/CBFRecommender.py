@@ -35,6 +35,11 @@ class ItemCBFKNNRecommender(object):
 
         self.W_sparse = similarity_object.compute_similarity()
 
+    def compute_score(self, user_id):
+        user_profile = self.URM[user_id]
+        scores = user_profile.dot(self.W_sparse).toarray().ravel()
+        return scores
+
     def recommend(self, user_id, at=10, exclude_seen=True):
         # compute the scores using the dot product
         user_profile = self.URM[user_id]
