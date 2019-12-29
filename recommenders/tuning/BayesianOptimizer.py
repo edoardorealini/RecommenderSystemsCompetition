@@ -1,4 +1,5 @@
 from bayes_opt import BayesianOptimization
+import time
 
 from Notebooks_utils.evaluation_function import evaluate_algorithm_original
 from recommenders.CBFRecommender import ItemCBFKNNRecommender
@@ -60,12 +61,12 @@ def run(# als_weight,
 if __name__ == '__main__':
     # Bounded region of parameter space
     pbounds = {     # 'als_weight': (0, 5),
-                    'item_cf_weight': (0, 8),
-                    'rp3_weight': (4, 8),
-                    'elastic_weight': (0, 5),
-                    'item_cbf_weight': (5, 10),
+                    'item_cf_weight': (5, 12),
+                    'rp3_weight': (4, 10),
+                    'elastic_weight': (3, 7),
+                    'item_cbf_weight': (0, 6),
                     # 'slim_bpr_weight': (0, 5),
-                    'user_cf_weight': (0, 3)
+                    'user_cf_weight': (3, 7)
               }
 
     optimizer = BayesianOptimization(
@@ -74,9 +75,14 @@ if __name__ == '__main__':
         verbose=2  # verbose = 1 prints only when a maximum is observed, verbose = 0 is silent
     )
 
+    start_time = time.time()
+
     optimizer.maximize(
         init_points=5,  # random steps
         n_iter=10,      # iterations after random steps
     )
 
+    end_time = time.time()
+
     print(optimizer.max)
+    print("Elapsed time = {} minutes".format((end_time-start_time)/60))
