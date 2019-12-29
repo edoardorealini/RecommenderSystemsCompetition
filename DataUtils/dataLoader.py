@@ -19,3 +19,11 @@ def load_all_data():
 
     return URM_all, URM_train, URM_test
 
+
+def load_ICM():
+    ICM_all = sps.load_npz('C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/sparse_ICM.npz')
+    print("ICM_all correctly loaded from path: data/competition/sparse_ICM.npz")
+    ICM_all = ICM_all.tocsr()
+
+    return ICM_all
+

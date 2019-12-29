@@ -11,16 +11,21 @@ class UserCFKNNRecommender(object):
     def __init__(self, URM):
         self.URM = URM
 
-    def fit(self, topK=10, shrink=50, normalize=False, similarity="jaccard"):
+    def fit(self, topK=10, shrink=0.5, normalize=False, similarity="jaccard"):
+        print("[UserCFKNN] Fitting model with parameters: topK={}, shrink={}, similarity={}".format(topK, shrink, similarity))
+
         similarity_object = Compute_Similarity_Python(self.URM.T, shrink=shrink,
                                                       topK=topK, normalize=normalize,
                                                       similarity=similarity)
 
         self.W_sparse = similarity_object.compute_similarity()
 
+    def compute_score(self, user_id):
+        scores = self.W_sparse[user_id, :].dot(self.URM).toarray().ravel()
+        return scores
+
     def recommend(self, user_id, at=None, exclude_seen=True):
         # compute the scores using the dot product
-
         scores = self.W_sparse[user_id, :].dot(self.URM).toarray().ravel()
 
         if exclude_seen:
@@ -40,6 +45,3 @@ class UserCFKNNRecommender(object):
         scores[user_profile] = -np.inf
 
         return scores
-
-
-
