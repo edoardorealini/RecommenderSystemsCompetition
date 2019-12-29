@@ -49,3 +49,17 @@ class UserCFKNNRecommender(object):
         scores[user_profile] = -np.inf
 
         return scores
+
+    def save_model(self, name, path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/models/UserCFKNN"):
+        print("[UserCFKNN] Saving model on file " + path + "/" + name + ".npz")
+        sps.save_npz(path + "/" + name + ".npz", self.W_sparse, compressed=True)
+
+    def load_model(self, name, path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/models/UserCFKNN"):
+        print("[UserCFKNN] Loading model from file " + path + "/" + name + ".npz")
+        self.W_sparse = sps.load_npz(path + "/" + name + ".npz")
+        print("[UserCFKNN] Model loaded correctly")
+        self.W_sparse = self.W_sparse.tocsr()
+
+    def get_model(self):
+        return self.W_sparse
+

@@ -1,43 +1,46 @@
-from DataUtils.dataLoader import load_all_data
+from DataUtils.dataLoader import *
 from DataUtils.datasetSplitter import datasetSplitter
 
 from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
 from recommenders.RP3betaGraphBased import RP3betaRecommender
 from recommenders.SLIM_ElasticNet import SLIMElasticNetRecommender
 from recommenders.LinearHybridRecommender import LinearHybridRecommender
+from recommenders.CBFRecommender import ItemCBFKNNRecommender
+from recommenders.UserCFKNNRecommender import UserCFKNNRecommender
 
 from Notebooks_utils.evaluation_function import evaluate_algorithm_original
 
 from DataUtils.ouputGenerator import *
 from DataUtils.ouputGenerator import create_output_coldUsers_Age
 
-import scipy.sparse as sps
 import numpy as np
 
 # Data splitting
-resplit_data = False
+resplit_data = False  # DO NOT TOUCH
 
 # Train information
-test_model_name = "test4"  # use different name when training with different parameters
-test_model_name_elastic = "test1_URM_train"
+test_model_name = "test7.3_URM_train"  # use different name when training with different parameters
+test_model_name_elastic = "test3_URM_train"  # Change only if retrain in train test ElasticNet, otherwise don't touch here
 retrain = False  # to use in case of change in default parameters of each recommender class
 
 # Evaluation
-evaluate_hybrid = False
+evaluate_hybrid = True
 
 # Parameter search
-search_parameters_random = True
+search_parameters_random = False
 iterations = 10
 tuning_log_name = "random_search_10iter"
 
 # Output generation
 use_URM_all = False
 create_output = False
-output_file_name = "linear_hybrid_test1_28_12"
+output_file_name = "lincomb_hyb_5algs_29_12"
 
-a = 1.0  # alpha value, wight for ItemCFKNN
-b = 0.5  # beta value, weight for RP3beta
-g = 0.5  # gamma value, weight for SLIMElasticNet
+ItemCFKNN_weight = 2
+RP3beta_weight = 1.0
+SLIMElasticNet_weight = 1.0
+ItemCBF_weight = 1.0
+UserCFKNN_weight = 1.0
 
 if resplit_data:
     splitter = datasetSplitter()
@@ -45,6 +48,7 @@ if resplit_data:
     splitter.splitDataBetter()
 
 URM_all, URM_train, URM_test = load_all_data()
+ICM_all = load_ICM()
 
 if use_URM_all:
     print("[LinearHybrid_test] Creating output, training algorithms on URM_all")
@@ -52,12 +56,16 @@ if use_URM_all:
     ItemCFKNN = ItemCFKNNRecommender(URM_all)
     RP3beta = RP3betaRecommender(URM_all)
     SLIMElasticNet = SLIMElasticNetRecommender(URM_all)
+    ItemCBF = ItemCBFKNNRecommender(URM_all, ICM=ICM_all)
+    UserCFKNN = UserCFKNNRecommender(URM_all)
 
 else:
     print("[LinearHybrid_test] Testing Algorithm, training on URM_train")
     ItemCFKNN = ItemCFKNNRecommender(URM_train)
     RP3beta = RP3betaRecommender(URM_train)
     SLIMElasticNet = SLIMElasticNetRecommender(URM_train)
+    ItemCBF = ItemCBFKNNRecommender(URM_train, ICM=ICM_all)
+    UserCFKNN = UserCFKNNRecommender(URM_train)
 
 if retrain:
     print("[LinearHybrid_test] Retraining all algorithms, except for SLIM ElasticNet - loading ElasticNet model from file")
@@ -65,27 +73,32 @@ if retrain:
     # Note that all the algorithms have decent tuning already as default parameters of fit methods
     ItemCFKNN.fit()
     ItemCFKNN.save_model(name=test_model_name)
-    ItemCFKNN_similarity = ItemCFKNN.get_model()
 
     RP3beta.fit()
     RP3beta.save_model(name=test_model_name)
-    RP3beta_similarity = RP3beta.get_model()
 
     SLIMElasticNet.load_model(name=test_model_name_elastic)
-    SLIMElasticNet_similarity = SLIMElasticNet.get_model()
+
+    ItemCBF.fit()
+    ItemCBF.save_model(name=test_model_name)
+
+    UserCFKNN.fit()
+    UserCFKNN.save_model(name=test_model_name)
 
 if not retrain:
     print("[LinearHybrid_test] Loading trained models from file, faster approach")
     ItemCFKNN.load_model(name=test_model_name)
     RP3beta.load_model(name=test_model_name)
     SLIMElasticNet.load_model(name=test_model_name_elastic)
+    ItemCBF.load_model(name=test_model_name)
+    UserCFKNN.load_model(name=test_model_name)
 
 if use_URM_all:
-    hybrid = LinearHybridRecommender(URM_all, ItemCFKNN, RP3beta, SLIMElasticNet)
-    hybrid.fit(alpha=a, beta=b, gamma=g)
+    hybrid = LinearHybridRecommender(URM_all, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN)
+    hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, retrain_all_algorithms=False)
 else:
-    hybrid = LinearHybridRecommender(URM_train, ItemCFKNN, RP3beta, SLIMElasticNet)
-    hybrid.fit(alpha=a, beta=b, gamma=g)
+    hybrid = LinearHybridRecommender(URM_train, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN)
+    hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, retrain_all_algorithms=False)
 
 if evaluate_hybrid:
     print("[LinearHybrid_test] Evaluating algorithm")

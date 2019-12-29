@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.sparse as sps
 from Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
 
 
@@ -8,7 +9,7 @@ class ItemCBFKNNRecommender(object):
         self.URM = URM
         self.ICM = ICM
 
-    def fit(self, topK=10, shrink=10, normalize=False, similarity="jaccard"):
+    def fit(self, topK=10, shrink=1, normalize=False, similarity="jaccard"):
         print("[ItemCBFRecommender] Fitting model with parameters: topK={}, shrink={}, similarity={}".format(topK, shrink, similarity))
         similarity_object = Compute_Similarity_Python(self.ICM.T, shrink=shrink,
                                                       topK=topK, normalize=normalize,
@@ -47,3 +48,16 @@ class ItemCBFKNNRecommender(object):
         scores[user_profile] = -np.inf
 
         return scores
+
+    def save_model(self, name, path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/models/ItemCBF"):
+        print("[ItemCBF] Saving model on file " + path + "/" + name + ".npz")
+        sps.save_npz(path + "/" + name + ".npz", self.W_sparse, compressed=True)
+
+    def load_model(self, name, path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/models/ItemCBF"):
+        print("[ItemCBF] Loading model from file " + path + "/" + name + ".npz")
+        self.W_sparse = sps.load_npz(path + "/" + name + ".npz")
+        print("[ItemCBF] Model loaded correctly")
+        self.W_sparse = self.W_sparse.tocsr()
+
+    def get_model(self):
+        return self.W_sparse
