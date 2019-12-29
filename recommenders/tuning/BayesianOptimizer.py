@@ -9,8 +9,8 @@ from recommenders.LinearHybridRecommender import LinearHybridRecommender
 from DataUtils.dataLoader import *
 from recommenders.UserCFKNNRecommender import UserCFKNNRecommender
 
-test_model_name = "test5"  # use different name when training with different parameters
-test_model_name_elastic = "test1_URM_train"
+test_model_name = "test7.3_URM_train"  # use different name when training with different parameters
+test_model_name_elastic = "test3_URM_train"
 retrain = False
 
 
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     pbounds = {     # 'als_weight': (0, 5),
                     'elastic_weight': (0, 5),
                     'item_cbf_weight': (5, 10),
-                    'item_cf_weight': (0, 5),
+                    'item_cf_weight': (0, 8),
                     'rp3_weight': (4, 8),
                     # 'slim_bpr_weight': (0, 5),
                     'user_cf_weight': (0, 3)
@@ -76,7 +76,7 @@ if __name__ == '__main__':
 
     optimizer.maximize(
         init_points=5,  # random steps
-        n_iter=10,
+        n_iter=10,      # iterations after random steps
     )
 
     print(optimizer.max)
