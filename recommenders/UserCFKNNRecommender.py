@@ -3,7 +3,7 @@ import scipy.sparse as sps
 import numpy as np
 from DataUtils.ParserURM import ParserURM
 from DataUtils.ouputGenerator import *
-from Notebooks_utils.evaluation_function import evaluate_algorithm, evaluate_algorithm_coldUsers, evaluate_algorithm_original
+from Notebooks_utils.evaluation_function import evaluate_algorithm_original
 
 
 class UserCFKNNRecommender(object):

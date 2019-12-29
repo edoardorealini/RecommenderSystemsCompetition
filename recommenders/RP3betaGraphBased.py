@@ -6,7 +6,7 @@ from Base.Recommender_utils import check_matrix, similarityMatrixTopK
 
 from Base.BaseSimilarityMatrixRecommender import BaseSimilarityMatrixRecommender
 import time, sys
-from Notebooks_utils.evaluation_function import evaluate_algorithm, evaluate_algorithm_coldUsers, evaluate_algorithm_original
+from Notebooks_utils.evaluation_function import evaluate_algorithm_original
 
 
 class RP3betaRecommender(BaseSimilarityMatrixRecommender):

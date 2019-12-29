@@ -1,7 +1,7 @@
 from Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
 import numpy as np
 from DataUtils.ouputGenerator import *
-from Notebooks_utils.evaluation_function import evaluate_algorithm_coldUsers, evaluate_algorithm_original
+from Notebooks_utils.evaluation_function import evaluate_algorithm_original
 from recommenders import TopPopRecommender as tp
 
 
