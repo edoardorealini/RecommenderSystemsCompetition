@@ -60,10 +60,10 @@ def run(# als_weight,
 if __name__ == '__main__':
     # Bounded region of parameter space
     pbounds = {     # 'als_weight': (0, 5),
-                    'elastic_weight': (0, 5),
-                    'item_cbf_weight': (5, 10),
                     'item_cf_weight': (0, 8),
                     'rp3_weight': (4, 8),
+                    'elastic_weight': (0, 5),
+                    'item_cbf_weight': (5, 10),
                     # 'slim_bpr_weight': (0, 5),
                     'user_cf_weight': (0, 3)
               }
