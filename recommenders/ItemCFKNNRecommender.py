@@ -18,9 +18,13 @@ class ItemCFKNNRecommender(object):
         print("[ItemCFKNNRecommender] Fitting with parameters: topK={}, shrink={}".format(topK,shrink))
         self.W_sparse = similarity_object.compute_similarity()
 
-    def compute_score(self, user_id):
+    def compute_score(self, user_id, exclude_seen=True):
         user_profile = self.URM[user_id]
         scores = user_profile.dot(self.W_sparse).toarray().ravel()
+
+        if exclude_seen:
+            scores = self.filter_seen(user_id, scores)
+
         return scores
 
     def recommend(self, user_id, at=None, exclude_seen=True):

@@ -145,12 +145,14 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
 
         self.W_sparse = check_matrix(self.W_sparse, format='csr')
 
-
-    def compute_score(self, user_id):
+    def compute_score(self, user_id, exclude_seen=True):
         user_profile = self.URM[user_id]
         scores = user_profile.dot(self.W_sparse).toarray().ravel()
-        return scores
 
+        if exclude_seen:
+            scores = self.filter_seen(user_id, scores)
+
+        return scores
 
     def recommend(self, user_id, at=None, exclude_seen=True):
         # compute the scores using the dot product
