@@ -27,9 +27,10 @@ class LinearHybridRecommender():
             self.Recommender_2.fit()
             self.Recommender_3.fit()
 
+        print("[LinearHybridRecommender] Fitting with parameters: alpha={}, beta={}, gamma={}".format(alpha, beta, gamma))
         self.alpha = alpha
         self.beta = beta
-        self.gamma =gamma
+        self.gamma = gamma
 
     def compute_scores_hybrid(self, user_id):
         item_weights_1 = self.Recommender_1.compute_score(user_id)

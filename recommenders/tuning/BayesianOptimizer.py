@@ -1,0 +1,76 @@
+from bayes_opt import BayesianOptimization
+import scipy.sparse as sps
+
+from DataUtils.ouputGenerator import *
+from Notebooks_utils.evaluation_function import evaluate_algorithm_original
+from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
+from recommenders.RP3betaGraphBased import RP3betaRecommender
+from recommenders.SLIM_ElasticNet import SLIMElasticNetRecommender
+from recommenders.LinearHybridRecommender import LinearHybridRecommender
+from DataUtils.ouputGenerator import create_output_coldUsers_Age
+from DataUtils.dataLoader import load_all_data
+from DataUtils.datasetSplitter import datasetSplitter
+
+
+test_model_name = "test5"  # use different name when training with different parameters
+test_model_name_elastic = "test1_URM_train"
+retrain = False
+
+
+def run(# als_weight,
+        # item_cbf_weight,
+        item_cf_weight,
+        elastic_weight,
+        rp3_weight,
+        # slim_bpr_weight,
+        # user_cf_weight
+        ):
+
+    URM_all, URM_train, URM_test = load_all_data()
+
+    ItemCFKNN = ItemCFKNNRecommender(URM_train)
+    RP3beta = RP3betaRecommender(URM_train)
+    SLIMElasticNet = SLIMElasticNetRecommender(URM_train)
+
+    if retrain:
+        ItemCFKNN.fit()
+        RP3beta.fit()
+        SLIMElasticNet.fit()
+
+        ItemCFKNN.save_model(name=test_model_name)
+        RP3beta.save_model(name=test_model_name)
+        SLIMElasticNet.save_model(name=test_model_name_elastic)
+
+    ItemCFKNN.load_model(name=test_model_name)
+    RP3beta.load_model(name=test_model_name)
+    SLIMElasticNet.load_model(name=test_model_name_elastic)
+
+    recommender = LinearHybridRecommender(URM_train, ItemCFKNN, RP3beta, SLIMElasticNet)
+    recommender.fit(item_cf_weight, rp3_weight, elastic_weight)
+
+    return evaluate_algorithm_original(URM_test, recommender)["MAP"]
+
+
+if __name__ == '__main__':
+    # Bounded region of parameter space
+    pbounds = {     # 'als_weight': (0, 5),
+                    'elastic_weight': (0, 5),
+                    # 'item_cbf_weight': (5, 10),
+                    'item_cf_weight': (5, 10),
+                    'rp3_weight': (4, 8),
+                    # 'slim_bpr_weight': (0, 5),
+                    # 'user_cf_weight': (0, 3)
+              }
+
+    optimizer = BayesianOptimization(
+        f=run,
+        pbounds=pbounds,
+        verbose=2  # verbose = 1 prints only when a maximum is observed, verbose = 0 is silent
+    )
+
+    optimizer.maximize(
+        init_points=50,  # random steps
+        n_iter=10,
+    )
+
+    print(optimizer.max)

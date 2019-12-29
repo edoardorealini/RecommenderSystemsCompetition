@@ -10,7 +10,7 @@ class ItemCFKNNRecommender(object):
     def __init__(self, URM):
         self.URM = URM
 
-    def fit(self, topK=10, shrink=28, normalize=False, similarity="jaccard"):
+    def fit(self, topK=10, shrink=26.5, normalize=False, similarity="jaccard"):
 
         similarity_object = Compute_Similarity_Python(self.URM, shrink=shrink,
                                                       topK=topK, normalize=normalize,
@@ -54,7 +54,7 @@ class ItemCFKNNRecommender(object):
     def load_model(self, name, path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/models/ItemCFKNN"):
         print("[ItemCFKNN] Loading model from file " + path + "/" + name + ".npz")
         self.W_sparse = sps.load_npz(path + "/" + name + ".npz")
-        print("Loaded model correctly")
+        print("[ItemCFKNN] Model loaded correctly")
         self.W_sparse = self.W_sparse.tocsr()
 
     def get_model(self):

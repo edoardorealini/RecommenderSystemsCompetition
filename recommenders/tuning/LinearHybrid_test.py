@@ -5,45 +5,46 @@ from recommenders.RP3betaGraphBased import RP3betaRecommender
 from recommenders.SLIM_ElasticNet import SLIMElasticNetRecommender
 from recommenders.LinearHybridRecommender import LinearHybridRecommender
 from DataUtils.ouputGenerator import create_output_coldUsers_Age
+from DataUtils.dataLoader import load_all_data
+from DataUtils.datasetSplitter import datasetSplitter
+import scipy.sparse as sps
 
+import numpy as np
+
+# Data splitting
 resplit_data = False
 
-test_model_name = "test3"  # use different name when training with different parameters
-test_model_name_elastic = "test2_URM_train"
-retrain = True  # to use in case of change in default parameters of each recommender class
+# Train information
+test_model_name = "test4"  # use different name when training with different parameters
+test_model_name_elastic = "test1_URM_train"
+retrain = False  # to use in case of change in default parameters of each recommender class
 
+# Evaluation
 evaluate_hybrid = False
 
-use_URM_all = True
-create_output = True
+# Parameter search
+search_parameters_random = True
+iterations = 10
+tuning_log_name = "random_search_10iter"
+
+# Output generation
+use_URM_all = False
+create_output = False
 output_file_name = "linear_hybrid_test1_28_12"
 
-a = 1.2  # alpha value, wight for ItemCFKNN
-b = 0.7  # beta value, weight for RP3beta
+a = 1.0  # alpha value, wight for ItemCFKNN
+b = 0.5  # beta value, weight for RP3beta
 g = 0.5  # gamma value, weight for SLIMElasticNet
 
 if resplit_data:
-    from DataUtils.datasetSplitter import datasetSplitter
-    import scipy.sparse as sps
-
     splitter = datasetSplitter()
     splitter.loadURMdata("C:/Users/Utente/Desktop/RecSys-Competition-2019/data/competition/data_train.csv")
     splitter.splitDataBetter()
 
-URM_all = sps.load_npz('C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/sparse_URM.npz')
-print("URM correctly loaded from file: data/competition/sparse_URM.npz")
-URM_all = URM_all.tocsr()
-
-URM_test = sps.load_npz('C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/URM_test.npz')
-print("URM_test correctly loaded from file: data/competition/URM_test.npz")
-URM_test = URM_test.tocsr()
-
-URM_train = sps.load_npz('C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/URM_train.npz')
-print("URM_train correctly loaded from file: data/competition/URM_train.npz")
-URM_train = URM_train.tocsr()
+URM_all, URM_train, URM_test = load_all_data()
 
 if use_URM_all:
-    print("[LinearHybrid_test] Creating output, training algoritms on URM_all")
+    print("[LinearHybrid_test] Creating output, training algorithms on URM_all")
     test_model_name_elastic = "test2_URM_all"
     ItemCFKNN = ItemCFKNNRecommender(URM_all)
     RP3beta = RP3betaRecommender(URM_all)
@@ -76,11 +77,6 @@ if not retrain:
     RP3beta.load_model(name=test_model_name)
     SLIMElasticNet.load_model(name=test_model_name_elastic)
 
-    ItemCFKNN_similarity = ItemCFKNN.get_model()
-    RP3beta_similarity = RP3beta.get_model()
-    SLIMElasticNet_similarity = SLIMElasticNet.get_model()
-
-
 if use_URM_all:
     hybrid = LinearHybridRecommender(URM_all, ItemCFKNN, RP3beta, SLIMElasticNet)
     hybrid.fit(alpha=a, beta=b, gamma=g)
@@ -94,3 +90,30 @@ if evaluate_hybrid:
 
 if create_output:
     create_output_coldUsers_Age(output_name=output_file_name, recommender=hybrid)
+
+if search_parameters_random:
+    alpha_values = []
+    beta_values = []
+    gamma_values = []
+
+    for n in range(5, 21):
+        alpha_values.append(n/10)
+
+    for n in range(1, 11):
+        beta_values.append(n/10)
+        gamma_values.append(n/10)
+
+    file_log = open("C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/output/parameter_tuning/" + tuning_log_name + ".txt", "w")
+
+    for n_iter in range(iterations + 1):
+        alpha = np.random.choice(alpha_values, 1)
+        beta = np.random.choice(beta_values, 1)
+        gamma = np.random.choice(gamma_values, 1)
+
+        file_log.write("\n")
+        file_log.write(str(n_iter) + "Fitting hybrid with parameters: alpha={}, beta={}, gamma={}".format(alpha, beta, gamma))
+        hybrid.fit(alpha, beta, gamma)
+        file_log.write(str(evaluate_algorithm_original(URM_test, hybrid, at=10)))
+        file_log.write("----------------------------------------------------------------------------------------------------")
+
+    file_log.close()
