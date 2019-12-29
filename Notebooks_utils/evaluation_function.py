@@ -8,7 +8,6 @@ Created on 21/10/2018
 from time import sleep
 
 import numpy as np
-import progressbar
 import scipy.sparse as sps
 from tqdm import tqdm
 
