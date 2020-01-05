@@ -14,6 +14,7 @@ from Base.Incremental_Training_Early_Stopping import Incremental_Training_Early_
 
 from CythonCompiler.run_compile_subprocess import run_compile_subprocess
 import os, sys
+import scipy.sparse as sps
 
 
 def estimate_required_MB(n_items, symmetric):
@@ -53,9 +54,9 @@ class SLIM_BPR_Cython(BaseItemSimilarityMatrixRecommender, Incremental_Training_
 
 
     def __init__(self, URM_train,
-                 verbose = True,
-                 free_mem_threshold = 0.5,
-                 recompile_cython = False):
+                 verbose=True,
+                 free_mem_threshold=0.5,
+                 recompile_cython=False):
 
 
         super(SLIM_BPR_Cython, self).__init__(URM_train, verbose = verbose)
@@ -72,15 +73,12 @@ class SLIM_BPR_Cython(BaseItemSimilarityMatrixRecommender, Incremental_Training_
             print("Compilation Complete")
 
 
-
-
-
     def fit(self, epochs=300,
-            positive_threshold_BPR = None,
-            train_with_sparse_weights = None,
-            symmetric = True,
-            random_seed = None,
-            batch_size = 1000, lambda_i = 0.0, lambda_j = 0.0, learning_rate = 1e-4, topK = 200,
+            positive_threshold_BPR=None,
+            train_with_sparse_weights=None,
+            symmetric=False,
+            random_seed=None,
+            batch_size=1000, lambda_i=0.25, lambda_j=0.1, learning_rate=1e-4, topK=10,
             sgd_mode='adagrad', gamma=0.995, beta_1=0.9, beta_2=0.999,
             **earlystopping_kwargs):
 
@@ -218,3 +216,15 @@ class SLIM_BPR_Cython(BaseItemSimilarityMatrixRecommender, Incremental_Training_
         # Command to generate html report
         # cython -a SLIM_BPR_Cython_Epoch.pyx
 
+    def save_model(self, name, path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/models/SLIM_BPR_Cython"):
+        print("[SLIMCython] Saving model on file " + path + "/" + name + ".npz")
+        sps.save_npz(path + "/" + name + ".npz", self.W_sparse, compressed=True)
+
+    def load_model(self, name, path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/models/SLIM_BPR_Cython"):
+        print("[SLIMCython] Loading model from file " + path + "/" + name + ".npz")
+        self.W_sparse = sps.load_npz(path + "/" + name + ".npz")
+        print("[SLIMCython] Model loaded correctly")
+        self.W_sparse = self.W_sparse.tocsr()
+
+    def get_model(self):
+        return self.W_sparse

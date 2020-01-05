@@ -14,6 +14,7 @@ from KNN.ItemKNNCBFRecommender import ItemKNNCBFRecommender
 from KNN.UserKNNCFRecommender import UserKNNCFRecommender
 from GraphBased.RP3betaRecommender import RP3betaRecommender
 from SLIM_ElasticNet.SLIMElasticNetRecommender import SLIMElasticNetRecommender
+from SLIM_BPR.Cython.SLIM_BPR_Cython import SLIM_BPR_Cython
 
 from recommenders.LinearHybridRecommender import LinearHybridRecommender
 
@@ -35,12 +36,12 @@ test_model_name_elastic = "new_split_fun"  # Change only if retrain in train tes
 retrain = False  # to use in case of change in default parameters of each recommender class
 
 # Evaluation
-evaluate_hybrid = True
+evaluate_hybrid = False
 
 # Parameter search
-search_parameters_random = False
+search_parameters_random = True
 iterations = 10
-tuning_log_name = "random_search_10iter"
+tuning_log_name = "weights_seek_2randararys"
 
 # Output generation
 use_URM_all = False
@@ -52,6 +53,7 @@ RP3beta_weight = 1.2
 SLIMElasticNet_weight = 1.2
 ItemCBF_weight = 0.3
 UserCFKNN_weight = 0.2
+SLIMCython_weight = 0.7
 
 URM_all, URM_train, URM_test = load_data_split(0)
 ICM_all = load_ICM()
@@ -65,6 +67,8 @@ if resplit_data:
     URM_train, URM_test = train_test_holdout(URM_all, train_perc=0.8)
     URM_train, URM_validation = train_test_holdout(URM_train, train_perc=0.9)
 
+evaluator = EvaluatorHoldout(URM_test, cutoff_list=[10])
+
 if use_URM_all:
     print("[LinearHybrid_test] Creating output, training algorithms on URM_all")
     test_model_name_elastic = "model_URM_all"
@@ -73,6 +77,7 @@ if use_URM_all:
     SLIMElasticNet = SLIMElasticNetRecommender(URM_all)
     ItemCBF = ItemKNNCBFRecommender(URM_all, ICM_all)
     UserCFKNN = UserKNNCFRecommender(URM_all)
+    SLIMCython = SLIM_BPR_Cython(URM_all, verbose=False, recompile_cython=False)
 
 else:
     print("[LinearHybrid_test] Testing Algorithm, training on URM_train")
@@ -81,6 +86,8 @@ else:
     SLIMElasticNet = SLIMElasticNetRecommender(URM_train)
     ItemCBF = ItemKNNCBFRecommender(URM_train, ICM_all)
     UserCFKNN = UserKNNCFRecommender(URM_train)
+    SLIMCython = SLIM_BPR_Cython(URM_train, verbose=False, recompile_cython=False)
+
 
 if retrain:
     print("[LinearHybrid_test] Retraining all algorithms, except for SLIM ElasticNet - loading ElasticNet model from file")
@@ -102,6 +109,8 @@ if retrain:
     UserCFKNN.fit(topK=10, shrink=0.05, normalize=False, similarity="jaccard")
     UserCFKNN.save_model(name=test_model_name)
 
+    SLIMCython.load_model(name=test_model_name)
+
 if not retrain:
     print("[LinearHybrid_test] Loading trained models from file, faster approach")
     ItemCFKNN.load_model(name=test_model_name)
@@ -109,19 +118,19 @@ if not retrain:
     SLIMElasticNet.load_model(name=test_model_name_elastic)
     ItemCBF.load_model(name=test_model_name)
     UserCFKNN.load_model(name=test_model_name)
+    SLIMCython.load_model(name=test_model_name)
 
 if use_URM_all:
-    hybrid = LinearHybridRecommender(URM_all, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN)
-    hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, retrain_all_algorithms=False)
+    hybrid = LinearHybridRecommender(URM_all, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython)
+    hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
 else:
-    hybrid = LinearHybridRecommender(URM_train, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN)
-    hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, retrain_all_algorithms=False)
+    hybrid = LinearHybridRecommender(URM_train, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython)
+    hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
 
 if evaluate_hybrid:
     print("[LinearHybrid_test] Evaluating algorithm")
     # evaluate_algorithm_original(URM_test, hybrid, at=10)
 
-    evaluator = EvaluatorHoldout(URM_test, cutoff_list=[10])
     results_dict, results_run_string = evaluator.evaluateRecommender(hybrid)
     print("MAP result = {}".format(results_dict[10]["MAP"]))
 
@@ -129,28 +138,35 @@ if create_output:
     create_output_coldUsers_Age(output_name=output_file_name, recommender=hybrid)
 
 if search_parameters_random:
-    alpha_values = []
-    beta_values = []
-    gamma_values = []
+    high_weights = []
+    low_weights = []
 
-    for n in range(5, 21):
-        alpha_values.append(n/10)
+    for n in range(10, 21):
+        high_weights.append(n/10)
 
-    for n in range(1, 11):
-        beta_values.append(n/10)
-        gamma_values.append(n/10)
+    for n in range(0, 11):
+        low_weights.append(n/10)
 
     file_log = open("C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/output/parameter_tuning/" + tuning_log_name + ".txt", "w")
 
     for n_iter in range(iterations + 1):
-        alpha = np.random.choice(alpha_values, 1)
-        beta = np.random.choice(beta_values, 1)
-        gamma = np.random.choice(gamma_values, 1)
+        print("\n[randomWeights_search] Iteration number {}\n".format(n_iter))
+
+        ItemCFKNN_weight = np.random.choice(high_weights, 1)
+        RP3beta_weight = np.random.choice(high_weights, 1)
+        SLIMElasticNet_weight = np.random.choice(high_weights, 1)
+        ItemCBF_weight = np.random.choice(low_weights, 1)
+        UserCFKNN_weight = np.random.choice(low_weights, 1)
+        SLIMCython_weight = np.random.choice(high_weights, 1)
 
         file_log.write("\n")
-        file_log.write(str(n_iter) + "Fitting hybrid with parameters: alpha={}, beta={}, gamma={}".format(alpha, beta, gamma))
-        hybrid.fit(alpha, beta, gamma)
-        file_log.write(str(evaluate_algorithm_original(URM_test, hybrid, at=10)))
+        file_log.write(str(n_iter) + "Fitting with parameters: ItemCFKNN_weight={}, RP3beta_weight={}, SLIMElasticNet_weight={}, ItemCBF_weight={}, UserCFKNN_weight={}, SLIMCython_weight={}"
+              .format(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight))
+        hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
+        dictionary, string = evaluator.evaluateRecommender(hybrid)
+        result = "The MAP result for this tuning is:" + str(dictionary[10]["MAP"])
+        print(result)
+        file_log.write(result + "\n")
         file_log.write("----------------------------------------------------------------------------------------------------")
 
     file_log.close()
