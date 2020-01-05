@@ -1,19 +1,28 @@
 from bayes_opt import BayesianOptimization
 import time
 
-from Notebooks_utils.evaluation_function import evaluate_algorithm_original
-from recommenders.CBFRecommender import ItemCBFKNNRecommender
-from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
-from recommenders.RP3betaGraphBased import RP3betaRecommender
-from recommenders.SLIM_ElasticNet import SLIMElasticNetRecommender
-from recommenders.LinearHybridRecommender import LinearHybridRecommender
-from DataUtils.dataLoader import *
-from recommenders.UserCFKNNRecommender import UserCFKNNRecommender
+from KNN.ItemKNNCFRecommender import ItemKNNCFRecommender
+from KNN.ItemKNNCBFRecommender import ItemKNNCBFRecommender
+from KNN.UserKNNCFRecommender import UserKNNCFRecommender
+from GraphBased.RP3betaRecommender import RP3betaRecommender
+from SLIM_ElasticNet.SLIMElasticNetRecommender import SLIMElasticNetRecommender
 
-test_model_name = "test7.3_URM_train"  # use different name when training with different parameters
-test_model_name_elastic = "test3_URM_train"
+from recommenders.LinearHybridRecommender import LinearHybridRecommender
+
+from DataUtils.dataLoader import *
+
+from DataUtils.ouputGenerator import create_output_coldUsers_Age
+from Base.Evaluation.Evaluator import EvaluatorHoldout
+from Notebooks_utils.data_splitter import train_test_holdout
+
+test_model_name = "new_split_fun"  # use different name when training with different parameters
+test_model_name_elastic = "new_split_fun"
 retrain = False
 
+URM_all, URM_train, URM_test = load_data_split(split_number=0)
+ICM_all = load_ICM()
+
+evaluator = EvaluatorHoldout(URM_test, cutoff_list=[10])
 
 def run(# als_weight,
         item_cbf_weight,
@@ -24,14 +33,11 @@ def run(# als_weight,
         user_cf_weight
         ):
 
-    URM_all, URM_train, URM_test = load_all_data()
-    ICM_all = load_ICM()
-
-    ItemCFKNN = ItemCFKNNRecommender(URM_train)
+    ItemCFKNN = ItemKNNCFRecommender(URM_train)
     RP3beta = RP3betaRecommender(URM_train)
     SLIMElasticNet = SLIMElasticNetRecommender(URM_train)
-    ItemCBF = ItemCBFKNNRecommender(URM_train, ICM=ICM_all)
-    UserCFKNN = UserCFKNNRecommender(URM_train)
+    ItemCBF = ItemKNNCBFRecommender(URM_train, ICM_all)
+    UserCFKNN = UserKNNCFRecommender(URM_train)
 
     if retrain:
         ItemCFKNN.fit()
@@ -55,7 +61,10 @@ def run(# als_weight,
     recommender = LinearHybridRecommender(URM_train, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN)
     recommender.fit(item_cf_weight, rp3_weight, elastic_weight, item_cbf_weight, user_cf_weight)
 
-    return evaluate_algorithm_original(URM_test, recommender)["MAP"]
+    result_dict, result_string = evaluator.evaluateRecommender(recommender)
+    map = result_dict[10]["MAP"]
+
+    return map
 
 
 if __name__ == '__main__':

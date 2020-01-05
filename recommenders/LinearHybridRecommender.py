@@ -1,8 +1,10 @@
 from Base.Recommender_utils import check_matrix
+from Base.BaseSimilarityMatrixRecommender import BaseItemSimilarityMatrixRecommender
+
 import numpy as np
 
 
-class LinearHybridRecommender:
+class LinearHybridRecommender(BaseItemSimilarityMatrixRecommender):
     """ LinearHybridRecommender
     Hybrid of two prediction scores R = R1*alpha + R2*(1-alpha)
 
@@ -11,7 +13,7 @@ class LinearHybridRecommender:
     RECOMMENDER_NAME = "LinearHybridRecommender"
 
     def __init__(self, URM_train, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN):
-        super(LinearHybridRecommender, self).__init__()
+        super(LinearHybridRecommender, self).__init__(URM_train)
         self.URM_train = check_matrix(URM_train.copy(), 'csr')
 
         self.ItemCFKNN = ItemCFKNN
@@ -40,22 +42,23 @@ class LinearHybridRecommender:
         self.ItemCBF_weight = ItemCBF_weight
         self.UserCFKNN_weight = UserCFKNN_weight
 
-    def compute_scores_hybrid(self, user_id):
-        item_scores_ItemCFKNN = self.ItemCFKNN.compute_score(user_id)
-        item_scores_RP3beta = self.RP3beta.compute_score(user_id)
-        item_scores_SLIMElasticNet = self.SLIMElasticNet.compute_score(user_id)
-        item_scores_ItemCBF = self.ItemCBF.compute_score(user_id)
-        item_scores_UserCFKNN = self.UserCFKNN.compute_score(user_id)
+    def _compute_item_score(self, user_id, items_to_compute=None):
+        item_scores_ItemCFKNN = self.ItemCFKNN._compute_item_score(user_id)
+        item_scores_RP3beta = self.RP3beta._compute_item_score(user_id)
+        item_scores_SLIMElasticNet = self.SLIMElasticNet._compute_item_score(user_id)
+        item_scores_ItemCBF = self.ItemCBF._compute_item_score(user_id)
+        # item_scores_UserCFKNN = self.UserCFKNN._compute_item_score(user_id)
 
         item_scores_weighted = item_scores_ItemCFKNN * self.ItemCFKNN_weight + \
                                item_scores_RP3beta * self.RP3beta_weight + \
                                item_scores_SLIMElasticNet * self.SLIMElasticNet_weight + \
-                               item_scores_ItemCBF * self.ItemCBF_weight + \
-                               item_scores_UserCFKNN * self.UserCFKNN_weight
+                               item_scores_ItemCBF * self.ItemCBF_weight
+                               # item_scores_UserCFKNN * self.UserCFKNN_weight
 
         return item_scores_weighted
 
-    def recommend(self, user_id, at=10, exclude_seen=True):
+    '''
+    def recommend(self, user_id, at=10, exclude_seen=False):
         scores = self.compute_scores_hybrid(user_id)
 
         if exclude_seen:
@@ -76,3 +79,5 @@ class LinearHybridRecommender:
         scores[user_profile] = -np.inf
 
         return scores
+    
+    '''

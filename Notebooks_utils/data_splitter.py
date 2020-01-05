@@ -12,7 +12,7 @@ import scipy.sparse as sps
 
 
 def train_test_holdout(URM_all, train_perc = 0.8):
-
+    print("[DataSplitter] Splitting data: train_test_holdout")
 
     numInteractions = URM_all.nnz
     URM_all = URM_all.tocoo()

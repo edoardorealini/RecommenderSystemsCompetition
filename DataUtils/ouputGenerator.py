@@ -132,7 +132,7 @@ def create_output_coldUsers_Age(output_name, recommender):
             recommended_items = recommendTopPopOnAge(getUserAge(user))
 
         else:
-            recommended_items = recommender.recommend(user, at=10)
+            recommended_items = recommender.recommend(user)[0:10]
 
         output.write(list_to_output(user, recommended_items))
 
