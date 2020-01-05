@@ -1,5 +1,5 @@
 from Notebooks_utils import evaluate_algorithm
-from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
+from recommenders.old_Algorithms.ItemCFKNNRecommender import ItemCFKNNRecommender
 from DataUtils.datasetSplitter import datasetSplitter
 
 # shrink tuning for the ItemKNNCFRecommender

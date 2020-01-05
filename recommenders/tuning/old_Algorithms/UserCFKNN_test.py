@@ -1,9 +1,5 @@
-import scipy.sparse as sps
-import numpy as np
-from Notebooks_utils.evaluation_function import evaluate_algorithm_original
 from DataUtils.dataLoader import load_all_data
-from recommenders.UserCFKNNRecommender import UserCFKNNRecommender
-import time
+from recommenders.old_Algorithms.UserCFKNNRecommender import UserCFKNNRecommender
 
 URM_all, URM_train, URM_test = load_all_data()
 

@@ -3,9 +3,9 @@
 
 import DataUtils.ParserURM as parser
 from DataUtils.UserSplitterByAge import *
-import recommenders.TopPopRecommender as tp
+import recommenders.old_Algorithms.TopPopRecommender as tp
 import scipy.sparse as sps
-from tqdm import tqdm
+
 
 def createLine(age, listOfRecommends):
     line = ""

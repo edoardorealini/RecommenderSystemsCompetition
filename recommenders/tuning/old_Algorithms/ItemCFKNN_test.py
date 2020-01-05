@@ -1,9 +1,7 @@
-from Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
-import numpy as np
 from DataUtils.ouputGenerator import *
 from Notebooks_utils.evaluation_function import evaluate_algorithm_original
-from recommenders import TopPopRecommender as tp
-from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
+from recommenders.old_Algorithms import TopPopRecommender as tp
+from recommenders.old_Algorithms.ItemCFKNNRecommender import ItemCFKNNRecommender
 
 URM_all = sps.load_npz('C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/sparse_URM.npz')
 print("URM correctly loaded from file: data/competition/sparse_URM.npz")

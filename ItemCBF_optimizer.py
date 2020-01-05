@@ -2,7 +2,7 @@ from bayes_opt import BayesianOptimization
 import time
 
 from Notebooks_utils.evaluation_function import evaluate_algorithm_original
-from recommenders.CBFRecommender import ItemCBFKNNRecommender
+from recommenders.old_Algorithms.CBFRecommender import ItemCBFKNNRecommender
 
 from DataUtils.dataLoader import *
 

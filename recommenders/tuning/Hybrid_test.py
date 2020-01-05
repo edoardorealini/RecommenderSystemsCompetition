@@ -1,8 +1,8 @@
 from DataUtils.ouputGenerator import *
 from Notebooks_utils.evaluation_function import evaluate_algorithm_original
-from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
-from recommenders.RP3betaGraphBased import RP3betaRecommender
-from recommenders.SLIM_ElasticNet import SLIMElasticNetRecommender
+from recommenders.old_Algorithms.ItemCFKNNRecommender import ItemCFKNNRecommender
+from recommenders.old_Algorithms.RP3betaGraphBased import RP3betaRecommender
+from recommenders.old_Algorithms.SLIM_ElasticNet import SLIMElasticNetRecommender
 from recommenders.HybridRecommender import HybridRecommender
 from DataUtils.ouputGenerator import create_output_coldUsers_Age
 

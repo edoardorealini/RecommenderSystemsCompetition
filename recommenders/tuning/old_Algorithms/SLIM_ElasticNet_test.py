@@ -1,6 +1,6 @@
 import scipy.sparse as sps
 from Notebooks_utils.evaluation_function import evaluate_algorithm_original
-from recommenders.SLIM_ElasticNet import SLIMElasticNetRecommender
+from recommenders.old_Algorithms.SLIM_ElasticNet import SLIMElasticNetRecommender
 
 evaluate_algorithm = False
 load_model = False

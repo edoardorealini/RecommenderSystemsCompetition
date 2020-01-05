@@ -1,7 +1,5 @@
-import time
-from Notebooks_utils.evaluation_function import evaluate_algorithm_original
 from DataUtils.dataLoader import *
-from recommenders.CBFRecommender import ItemCBFKNNRecommender
+from recommenders.old_Algorithms.CBFRecommender import ItemCBFKNNRecommender
 
 URM_all, URM_train, URM_test = load_all_data()
 ICM_all = load_ICM()

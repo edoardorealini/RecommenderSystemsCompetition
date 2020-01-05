@@ -1,8 +1,7 @@
 #load information
-import numpy as np
 import scipy.sparse as sps
-from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
-from recommenders.UserBasedRecommender import *
+from recommenders.old_Algorithms.ItemCFKNNRecommender import ItemCFKNNRecommender
+from recommenders.old_Algorithms.UserBasedRecommender import *
 from DataUtils.datasetSplitter import getColdUsers
 
 URM_all = sps.load_npz('data/competition/sparse_URM.npz')

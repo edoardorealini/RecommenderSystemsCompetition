@@ -1,6 +1,6 @@
 import scipy.sparse as sps
 from Notebooks_utils.evaluation_function import evaluate_algorithm_original
-from recommenders.RP3betaGraphBased import RP3betaRecommender
+from recommenders.old_Algorithms.RP3betaGraphBased import RP3betaRecommender
 
 URM_all = sps.load_npz('C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/sparse_URM.npz')
 print("URM correctly loaded from file: data/competition/sparse_URM.npz")
