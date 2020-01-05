@@ -19,7 +19,7 @@ import numpy as np
 resplit_data = False  # DO NOT TOUCH
 
 # Train information
-test_model_name = "test8_URM_all"  # use different name when training with different parameters
+test_model_name = "URM_all_model"  # use different name when training with different parameters
 test_model_name_elastic = "test3_URM_train"  # Change only if retrain in train test ElasticNet, otherwise don't touch here
 retrain = True  # to use in case of change in default parameters of each recommender class
 
@@ -34,13 +34,13 @@ tuning_log_name = "random_search_10iter"
 # Output generation
 use_URM_all = True
 create_output = True
-output_file_name = "lincomb_hyb_5algs_29_12"
+output_file_name = "linhyb_05_01"
 
-ItemCFKNN_weight = 11.487709280771284
-RP3beta_weight = 9.935534805726896
-SLIMElasticNet_weight = 6.677701877077066
-ItemCBF_weight = 0.03495743225101977
-UserCFKNN_weight = 3.313943343402494
+ItemCFKNN_weight = 1.2
+RP3beta_weight = 0.7
+SLIMElasticNet_weight = 0.5
+ItemCBF_weight = 0.2
+UserCFKNN_weight = 0.0
 
 if resplit_data:
     splitter = datasetSplitter()
@@ -52,7 +52,7 @@ ICM_all = load_ICM()
 
 if use_URM_all:
     print("[LinearHybrid_test] Creating output, training algorithms on URM_all")
-    test_model_name_elastic = "test2_URM_all"
+    test_model_name_elastic = "model_URM_all"
     ItemCFKNN = ItemCFKNNRecommender(URM_all)
     RP3beta = RP3betaRecommender(URM_all)
     SLIMElasticNet = SLIMElasticNetRecommender(URM_all)

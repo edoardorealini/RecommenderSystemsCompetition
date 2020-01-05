@@ -1,8 +1,5 @@
-import time
-
-import numpy as np
 import scipy.sparse as sps
-from Notebooks_utils.evaluation_function import evaluate_algorithm_original, evaluate_algorithm_coldUsers, evaluate_algorithm
+from Notebooks_utils.evaluation_function import evaluate_algorithm_original
 from recommenders.RP3betaGraphBased import RP3betaRecommender
 
 URM_all = sps.load_npz('C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/sparse_URM.npz')
@@ -18,10 +15,10 @@ print("URM_train correctly loaded from file: data/competition/URM_train.npz")
 URM_train = URM_train.tocsr()
 
 recommender = RP3betaRecommender(URM_train)
-
 recommender.fit()
+
 evaluate_algorithm_original(URM_test, recommender)
-evaluate_algorithm_coldUsers(URM_test, recommender)
+# evaluate_algorithm_coldUsers(URM_test, recommender)
 
 # okay, now that it works let's try to maximize this thing
 # Fixing alpha and searching for beta

@@ -1,8 +1,6 @@
 from Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
 import numpy as np
 from DataUtils.ouputGenerator import *
-from Notebooks_utils.evaluation_function import evaluate_algorithm_original
-from recommenders import TopPopRecommender as tp
 
 
 class ItemCFKNNRecommender(object):
@@ -10,7 +8,7 @@ class ItemCFKNNRecommender(object):
     def __init__(self, URM):
         self.URM = URM
 
-    def fit(self, topK=10, shrink=26.5, normalize=False, similarity="jaccard"):
+    def fit(self, topK=10, shrink=30, normalize=False, similarity="jaccard"):
 
         similarity_object = Compute_Similarity_Python(self.URM, shrink=shrink,
                                                       topK=topK, normalize=normalize,
@@ -18,7 +16,7 @@ class ItemCFKNNRecommender(object):
         print("[ItemCFKNNRecommender] Fitting with parameters: topK={}, shrink={}".format(topK,shrink))
         self.W_sparse = similarity_object.compute_similarity()
 
-    def compute_score(self, user_id, exclude_seen=True):
+    def compute_score(self, user_id, exclude_seen=False):
         user_profile = self.URM[user_id]
         scores = user_profile.dot(self.W_sparse).toarray().ravel()
 

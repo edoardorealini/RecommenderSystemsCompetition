@@ -20,7 +20,7 @@ class UserCFKNNRecommender(object):
 
         self.W_sparse = similarity_object.compute_similarity()
 
-    def compute_score(self, user_id, exclude_seen=True):
+    def compute_score(self, user_id, exclude_seen=False):
         scores = self.W_sparse[user_id, :].dot(self.URM).toarray().ravel()
 
         if exclude_seen:

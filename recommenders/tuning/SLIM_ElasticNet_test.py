@@ -2,8 +2,8 @@ import scipy.sparse as sps
 from Notebooks_utils.evaluation_function import evaluate_algorithm_original
 from recommenders.SLIM_ElasticNet import SLIMElasticNetRecommender
 
-evaluate_algorithm = True
-load_model = True
+evaluate_algorithm = False
+load_model = False
 
 URM_all = sps.load_npz('C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/sparse_URM.npz')
 print("URM correctly loaded from file: data/competition/sparse_URM.npz")
@@ -19,11 +19,11 @@ URM_train = URM_train.tocsr()
 
 print(type(URM_train))
 
-recommender = SLIMElasticNetRecommender(URM_train)
+recommender = SLIMElasticNetRecommender(URM_all)
 if not load_model:
-    print("[SLIMElasticNet_test]: Trying to fit . . .")
+    print("[SLIMElasticNet_test]: Fitting . . .")
     recommender.fit()
-    recommender.save_model(name="test3_URM_train")
+    recommender.save_model(name="model_URM_all")
 
 if load_model:
     recommender.load_model(name="test3_URM_train")

@@ -29,7 +29,7 @@ class SLIMElasticNetRecommender(BaseSimilarityMatrixRecommender):
         self.URM = URM_train
 
     def fit(self, l1_ratio=0.1, alpha=1e-4, positive_only=True, topK=10,
-            verbose=False):
+            verbose=True):
         print("[SLIMElasticNet]: Fitting  . . .")
         assert l1_ratio >= 0 and l1_ratio <= 1, "{}: l1_ratio must be between 0 and 1, provided value was {}".format(
             self.RECOMMENDER_NAME, l1_ratio)
@@ -135,7 +135,7 @@ class SLIMElasticNetRecommender(BaseSimilarityMatrixRecommender):
         self.W_sparse = sps.csr_matrix((values[:numCells], (rows[:numCells], cols[:numCells])),
                                        shape=(n_items, n_items), dtype=np.float32)
 
-    def compute_score(self, user_id, exclude_seen=True):
+    def compute_score(self, user_id, exclude_seen=False):
         user_profile = self.URM[user_id]
         scores = user_profile.dot(self.W_sparse).toarray().ravel()
 

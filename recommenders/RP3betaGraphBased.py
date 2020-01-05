@@ -24,7 +24,7 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             self.beta, self.min_rating, self.topK,
             self.implicit, self.normalize_similarity)
 
-    def fit(self, alpha=0.5, beta=0.2, min_rating=0, topK=10, implicit=True, normalize_similarity=False):
+    def fit(self, alpha=0.41, beta=0.049, min_rating=0, topK=10, implicit=True, normalize_similarity=True):
         self.alpha = alpha
         self.beta = beta
         self.min_rating = min_rating
@@ -145,7 +145,7 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
 
         self.W_sparse = check_matrix(self.W_sparse, format='csr')
 
-    def compute_score(self, user_id, exclude_seen=True):
+    def compute_score(self, user_id, exclude_seen=False):
         user_profile = self.URM[user_id]
         scores = user_profile.dot(self.W_sparse).toarray().ravel()
 

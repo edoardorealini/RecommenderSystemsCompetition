@@ -21,7 +21,7 @@ class LinearHybridRecommender:
         self.UserCFKNN = UserCFKNN
 
         # i think this following line is pretty useless.
-        self.compute_item_score = self.compute_scores_hybrid
+        # self.compute_item_score = self.compute_scores_hybrid
 
     def fit(self, ItemCFKNN_weight=1.0, RP3beta_weight=1.0, SLIMElasticNet_weight=1.0, ItemCBF_weight=1.0, UserCFKNN_weight=1.0, retrain_all_algorithms=False):
         if retrain_all_algorithms:

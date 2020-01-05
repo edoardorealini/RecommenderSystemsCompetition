@@ -1,7 +1,7 @@
 from Base.Similarity.Compute_Similarity_Python import Compute_Similarity_Python
 import numpy as np
 from DataUtils.ouputGenerator import *
-from Notebooks_utils.evaluation_function import evaluate_algorithm_coldUsers, evaluate_algorithm_original
+from Notebooks_utils.evaluation_function import evaluate_algorithm_original
 from recommenders import TopPopRecommender as tp
 from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
 
@@ -34,7 +34,7 @@ end_time = time.time()
 print("Fit time for CF: {:.2f} sec".format(end_time-start_time))
 
 start_time = time.time()
-recommender_TopPop.fit(URM_all)
+recommender_TopPop.fit(URM_train)
 end_time = time.time()
 print("Fit time for TopPop: {:.2f} sec".format(end_time-start_time))
 
