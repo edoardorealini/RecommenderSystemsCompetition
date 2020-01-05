@@ -27,12 +27,12 @@ from DataUtils.ouputGenerator import create_output_coldUsers_Age
 import numpy as np
 
 # Data splitting
-resplit_data = True  # DO NOT TOUCH
+resplit_data = False  # DO NOT TOUCH
 
 # Train information
 test_model_name = "new_split_fun"  # use different name when training with different parameters
-test_model_name_elastic = "test3_URM_train"  # Change only if retrain in train test ElasticNet, otherwise don't touch here
-retrain = True  # to use in case of change in default parameters of each recommender class
+test_model_name_elastic = "new_split_fun"  # Change only if retrain in train test ElasticNet, otherwise don't touch here
+retrain = False  # to use in case of change in default parameters of each recommender class
 
 # Evaluation
 evaluate_hybrid = True
@@ -47,13 +47,13 @@ use_URM_all = False
 create_output = False
 output_file_name = "4rick"
 
-ItemCFKNN_weight = 1.2
-RP3beta_weight = 0.7
-SLIMElasticNet_weight = 0.5
-ItemCBF_weight = 0.2
-UserCFKNN_weight = 0.0
+ItemCFKNN_weight = 1.5
+RP3beta_weight = 1.2
+SLIMElasticNet_weight = 1.2
+ItemCBF_weight = 0.3
+UserCFKNN_weight = 0.2
 
-URM_all, URM_train, URM_test = load_all_data()
+URM_all, URM_train, URM_test = load_data_split(0)
 ICM_all = load_ICM()
 
 if resplit_data:
@@ -99,7 +99,7 @@ if retrain:
     ItemCBF.fit(topK=10, shrink=1, normalize=False, similarity="jaccard")
     ItemCBF.save_model(name=test_model_name)
 
-    UserCFKNN.fit(topK=10, shrink=0.5, normalize=False, similarity="jaccard")
+    UserCFKNN.fit(topK=10, shrink=0.05, normalize=False, similarity="jaccard")
     UserCFKNN.save_model(name=test_model_name)
 
 if not retrain:
