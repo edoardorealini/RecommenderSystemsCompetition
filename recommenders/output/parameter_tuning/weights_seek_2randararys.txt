@@ -1,0 +1,23 @@
+
+0Fitting with parameters: ItemCFKNN_weight=[1.3], RP3beta_weight=[1.8], SLIMElasticNet_weight=[1.8], ItemCBF_weight=[0.6], UserCFKNN_weight=[0.1], SLIMCython_weight=[1.4]The MAP result for this tuning is:0.04166487948828844
+----------------------------------------------------------------------------------------------------
+1Fitting with parameters: ItemCFKNN_weight=[1.1], RP3beta_weight=[1.1], SLIMElasticNet_weight=[1.5], ItemCBF_weight=[0.4], UserCFKNN_weight=[0.2], SLIMCython_weight=[1.5]The MAP result for this tuning is:0.041384733110714535
+----------------------------------------------------------------------------------------------------
+2Fitting with parameters: ItemCFKNN_weight=[1.9], RP3beta_weight=[1.7], SLIMElasticNet_weight=[1.6], ItemCBF_weight=[1.], UserCFKNN_weight=[0.7], SLIMCython_weight=[1.6]The MAP result for this tuning is:0.03842300447803171
+----------------------------------------------------------------------------------------------------
+3Fitting with parameters: ItemCFKNN_weight=[1.3], RP3beta_weight=[1.6], SLIMElasticNet_weight=[1.9], ItemCBF_weight=[0.9], UserCFKNN_weight=[0.9], SLIMCython_weight=[1.6]The MAP result for this tuning is:0.03832165016394248
+----------------------------------------------------------------------------------------------------
+4Fitting with parameters: ItemCFKNN_weight=[1.4], RP3beta_weight=[1.], SLIMElasticNet_weight=[1.], ItemCBF_weight=[0.8], UserCFKNN_weight=[0.2], SLIMCython_weight=[1.1]The MAP result for this tuning is:0.03579703478279244
+----------------------------------------------------------------------------------------------------
+5Fitting with parameters: ItemCFKNN_weight=[1.2], RP3beta_weight=[1.], SLIMElasticNet_weight=[1.7], ItemCBF_weight=[0.7], UserCFKNN_weight=[0.5], SLIMCython_weight=[1.7]The MAP result for this tuning is:0.03825310226734851
+----------------------------------------------------------------------------------------------------
+6Fitting with parameters: ItemCFKNN_weight=[1.7], RP3beta_weight=[1.1], SLIMElasticNet_weight=[1.], ItemCBF_weight=[0.5], UserCFKNN_weight=[0.1], SLIMCython_weight=[1.2]The MAP result for this tuning is:0.04145743874245365
+----------------------------------------------------------------------------------------------------
+7Fitting with parameters: ItemCFKNN_weight=[1.8], RP3beta_weight=[1.6], SLIMElasticNet_weight=[1.], ItemCBF_weight=[0.2], UserCFKNN_weight=[0.4], SLIMCython_weight=[2.]The MAP result for this tuning is:0.04285041233203069
+----------------------------------------------------------------------------------------------------
+8Fitting with parameters: ItemCFKNN_weight=[1.6], RP3beta_weight=[1.3], SLIMElasticNet_weight=[1.6], ItemCBF_weight=[0.8], UserCFKNN_weight=[0.7], SLIMCython_weight=[1.5]The MAP result for this tuning is:0.038558792426908864
+----------------------------------------------------------------------------------------------------
+9Fitting with parameters: ItemCFKNN_weight=[1.9], RP3beta_weight=[1.], SLIMElasticNet_weight=[1.3], ItemCBF_weight=[0.4], UserCFKNN_weight=[0.5], SLIMCython_weight=[1.4]The MAP result for this tuning is:0.04175772630143415
+----------------------------------------------------------------------------------------------------
+10Fitting with parameters: ItemCFKNN_weight=[1.2], RP3beta_weight=[1.3], SLIMElasticNet_weight=[1.7], ItemCBF_weight=[0.2], UserCFKNN_weight=[0.], SLIMCython_weight=[1.3]The MAP result for this tuning is:0.04231723977227382
+----------------------------------------------------------------------------------------------------
