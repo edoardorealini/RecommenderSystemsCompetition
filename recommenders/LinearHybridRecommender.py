@@ -7,7 +7,6 @@ import numpy as np
 class LinearHybridRecommender(BaseItemSimilarityMatrixRecommender):
     """ LinearHybridRecommender
     Hybrid of N prediction scores obtained as Linear weighted combination of different recommender algorithms
-
     """
 
     RECOMMENDER_NAME = "LinearHybridRecommender"
