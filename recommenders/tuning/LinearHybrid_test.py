@@ -1,14 +1,3 @@
-from DataUtils.dataLoader import *
-from DataUtils.datasetSplitter import datasetSplitter
-
-'''
-from recommenders.ItemCFKNNRecommender import ItemCFKNNRecommender
-from recommenders.RP3betaGraphBased import RP3betaRecommender
-from recommenders.SLIM_ElasticNet import SLIMElasticNetRecommender
-from recommenders.CBFRecommender import ItemCBFKNNRecommender
-from recommenders.UserCFKNNRecommender import UserCFKNNRecommender
-'''
-
 from KNN.ItemKNNCFRecommender import ItemKNNCFRecommender
 from KNN.ItemKNNCBFRecommender import ItemKNNCBFRecommender
 from KNN.UserKNNCFRecommender import UserKNNCFRecommender
@@ -18,10 +7,9 @@ from SLIM_BPR.Cython.SLIM_BPR_Cython import SLIM_BPR_Cython
 
 from recommenders.LinearHybridRecommender import LinearHybridRecommender
 
-from Notebooks_utils.evaluation_function import evaluate_algorithm_original
+from DataUtils.dataLoader import *
 from Base.Evaluation.Evaluator import EvaluatorHoldout
 from Notebooks_utils.data_splitter import train_test_holdout
-from DataUtils.dataLoader import *
 
 from DataUtils.ouputGenerator import create_output_coldUsers_Age
 
@@ -33,29 +21,31 @@ resplit_data = False  # DO NOT TOUCH
 # Train information
 test_model_name = "new_split_fun"  # use different name when training with different parameters
 test_model_name_elastic = "new_split_fun"  # Change only if retrain in train test ElasticNet, otherwise don't touch here
-retrain = False  # to use in case of change in default parameters of each recommender class
+retrain = True  # to use in case of change in default parameters of each recommender class
 
 # Evaluation
-evaluate_hybrid = False
+evaluate_hybrid = True
 
 # Parameter search
-search_parameters_random = True
+search_parameters_random = False
 iterations = 10
 tuning_log_name = "weights_seek_2randararys"
 
 # Output generation
 use_URM_all = False
 create_output = False
-output_file_name = "4rick"
+output_file_name = "with_cython"
 
-ItemCFKNN_weight = 1.5
-RP3beta_weight = 1.2
-SLIMElasticNet_weight = 1.2
-ItemCBF_weight = 0.3
-UserCFKNN_weight = 0.2
-SLIMCython_weight = 0.7
+ItemCFKNN_weight = 1.882130
+RP3beta_weight = 1.653445
+SLIMElasticNet_weight = 0.944109
+ItemCBF_weight = 0.110378
+UserCFKNN_weight = 0.388142
+SLIMCython_weight = 1.876352
 
-URM_all, URM_train, URM_test = load_data_split(0)
+URM_train, URM_test = load_data_split(0)
+
+URM_all = load_URM_all()
 ICM_all = load_ICM()
 
 if resplit_data:
@@ -91,25 +81,26 @@ else:
 
 if retrain:
     print("[LinearHybrid_test] Retraining all algorithms, except for SLIM ElasticNet - loading ElasticNet model from file")
-
     # Note that all the algorithms have decent tuning already as default parameters of fit methods
-    ItemCFKNN.fit(topK=10, shrink=30, normalize=True, similarity="jaccard")
+    ItemCFKNN.fit(topK=10, shrink=30)
     ItemCFKNN.save_model(name=test_model_name)
 
-    RP3beta.fit(alpha=0.41, beta=0.049, min_rating=0, topK=10, implicit=True, normalize_similarity=True)
+    RP3beta.fit(topK=10)
     RP3beta.save_model(name=test_model_name)
 
     SLIMElasticNet.load_model(name=test_model_name_elastic)
-    # SLIMElasticNet.fit(l1_ratio=0.1, alpha=1e-4)
+    # SLIMElasticNet.fit(topK=100)
     # SLIMElasticNet.save_model(name=test_model_name)
 
-    ItemCBF.fit(topK=10, shrink=1, normalize=False, similarity="jaccard")
+    ItemCBF.fit(topK=10, shrink=30)
     ItemCBF.save_model(name=test_model_name)
 
-    UserCFKNN.fit(topK=10, shrink=0.05, normalize=False, similarity="jaccard")
+    UserCFKNN.fit(topK=10, shrink=30)
     UserCFKNN.save_model(name=test_model_name)
 
-    SLIMCython.load_model(name=test_model_name)
+    # SLIMCython.load_model(name=test_model_name)
+    SLIMCython.fit(epochs=500, topK=10)
+    SLIMCython.save_model(name=test_model_name)
 
 if not retrain:
     print("[LinearHybrid_test] Loading trained models from file, faster approach")

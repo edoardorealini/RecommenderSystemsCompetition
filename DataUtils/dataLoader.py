@@ -53,5 +53,5 @@ def load_data_split(split_number):
     print("URM_train correctly loaded from file: data/competition/" + "URM_train_" + str(split_number) + ".npz")
     URM_train = URM_train.tocsr()
 
-    return URM_all, URM_train, URM_test
+    return URM_train, URM_test
 
