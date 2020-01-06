@@ -9,8 +9,8 @@ ICM_all = load_ICM()
 recommender = ItemKNNCBFRecommender(URM_train, ICM_all)
 evaluator = EvaluatorHoldout(URM_test, [10])
 
-recommender.fit(topK=30, shrink=1, normalize=True, similarity="cosine")
-recommender.save_model(name="test_with_new_params")
+recommender.fit(topK=5, shrink=112, normalize=True, similarity="cosine")
+recommender.save_model(name="gino")
 
 dict, string = evaluator.evaluateRecommender(recommender)
 print("Evaluation result MAP: {}".format(dict[10]["MAP"]))
