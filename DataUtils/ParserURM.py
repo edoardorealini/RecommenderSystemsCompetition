@@ -79,7 +79,7 @@ class ParserURM():
 
     # Saves the URM in coo format in file
     def saveURMtoFile(self, path, filename):
-        sps.save_npz(path + filename, self.URM, compressed=True)
+        sps.save_npz(path + "/" + filename + ".npz", self.URM, compressed=True)
         print("[URM_parser]: File " + filename + " correctly saved in path: " + path)
 
     def getURMfromFile(self, path):

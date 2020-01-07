@@ -20,8 +20,9 @@ resplit_data = False  # DO NOT TOUCH
 
 # Train information
 test_model_name = "model_URM_all"  # use different name when training with different parameters
-test_model_name_elastic = "new_split_fun"  # Change only if retrain in train test ElasticNet, otherwise don't touch here
+test_model_name_elastic = "model_URM_all"  # Change only if retrain in train test ElasticNet, otherwise don't touch here
 retrain = True  # to use in case of change in default parameters of each recommender class
+split_n = 0
 
 # Evaluation
 evaluate_hybrid = False
@@ -34,29 +35,23 @@ tuning_log_name = "weights_seek_2randararys"
 # Output generation
 use_URM_all = True
 create_output = True
-output_file_name = "06_01_superTuna"
+output_file_name = "07_01_hyperTuna"
 
-ItemCFKNN_weight = 1.878350
-RP3beta_weight = 1.638739
-SLIMElasticNet_weight = 1.097934
-ItemCBF_weight = 0.271109
-UserCFKNN_weight = 0.301294
-SLIMCython_weight = 1.500200
+ItemCFKNN_weight = 1.972219
+RP3beta_weight = 1.895996
+SLIMElasticNet_weight = 1.867328
+ItemCBF_weight = 1.917049
+UserCFKNN_weight = 0.027272
+SLIMCython_weight = 1.762119
 
-URM_train, URM_test = load_data_split(0)
-
+URM_train, URM_test = load_data_split(split_number=split_n)
 URM_all = load_URM_all()
 
-ICM_all = load_ICM()
-
 if resplit_data:
-    '''
-    splitter = datasetSplitter()
-    splitter.loadURMdata("C:/Users/Utente/Desktop/RecSys-Competition-2019/data/competition/data_train.csv")
-    splitter.splitDataBetter()
-    '''
     URM_train, URM_test = train_test_holdout(URM_all, train_perc=0.8)
 
+ICM_all = load_ICM()
+# The error was: loading an older version of the ICM
 evaluator = EvaluatorHoldout(URM_test, cutoff_list=[10])
 
 if use_URM_all:
@@ -82,24 +77,24 @@ else:
 if retrain:
     print("[LinearHybrid_test] Retraining all algorithms, except for SLIM ElasticNet - loading ElasticNet model from file")
     # Note that all the algorithms have decent tuning already as default parameters of fit methods
-    ItemCFKNN.fit(topK=39, shrink=28)
+    ItemCFKNN.fit(topK=10, shrink=30)
     ItemCFKNN.save_model(name=test_model_name)
 
-    RP3beta.fit(topK=44)
+    RP3beta.fit(alpha=0.41417, beta=0.04995, min_rating=0, topK=54)
     RP3beta.save_model(name=test_model_name)
 
-    SLIMElasticNet.load_model(name=test_model_name_elastic)
-    # SLIMElasticNet.fit(topK=100)
-    # SLIMElasticNet.save_model(name=test_model_name)
+    # SLIMElasticNet.load_model(name=test_model_name_elastic)
+    SLIMElasticNet.fit(l1_ratio=0.1, alpha=1e-4, topK=100)
+    SLIMElasticNet.save_model(name=test_model_name)
 
-    ItemCBF.fit(topK=114, shrink=44)
+    ItemCBF.fit(topK=5, shrink=112, similarity='cosine', normalize=True)
     ItemCBF.save_model(name=test_model_name)
 
-    UserCFKNN.fit(topK=500, shrink=0.18)
+    UserCFKNN.fit(topK=600, shrink=0, similarity='cosine', normalize=True)
     UserCFKNN.save_model(name=test_model_name)
 
     # SLIMCython.load_model(name=test_model_name)
-    SLIMCython.fit(epochs=500, topK=200)
+    SLIMCython.fit(epochs=200, lambda_i=0.0, lambda_j=0.0, learning_rate=0.01, topK=10, sgd_mode='adagrad')
     SLIMCython.save_model(name=test_model_name)
 
 if not retrain:

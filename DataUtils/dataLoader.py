@@ -3,8 +3,8 @@ import scipy.sparse as sps
 
 def load_all_data():
     URM_all = sps.load_npz(
-        'C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/sparse_URM.npz')
-    print("URM correctly loaded from file: data/competition/sparse_URM.npz")
+        'C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/URM_all.npz')
+    print("URM correctly loaded from file: data/competition/URM_all.npz")
     URM_all = URM_all.tocsr()
 
     URM_test = sps.load_npz(
@@ -29,8 +29,8 @@ def load_ICM():
 
 def load_URM_all():
     URM_all = sps.load_npz(
-        'C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/sparse_URM.npz')
-    print("URM correctly loaded from file: data/competition/sparse_URM.npz")
+        'C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/URM_all.npz')
+    print("URM correctly loaded from file: data/competition/URM_all.npz")
     URM_all = URM_all.tocsr()
 
     return URM_all
@@ -39,8 +39,8 @@ def load_data_split(split_number):
     print("[DataLoader] Loading data split number " + str(split_number))
 
     URM_all = sps.load_npz(
-        'C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/sparse_URM.npz')
-    print("URM correctly loaded from file: data/competition/sparse_URM.npz")
+        'C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/URM_all.npz')
+    print("URM correctly loaded from file: data/competition/URM_all.npz")
     URM_all = URM_all.tocsr()
 
     URM_test = sps.load_npz(
