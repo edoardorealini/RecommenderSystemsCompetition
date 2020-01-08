@@ -21,7 +21,7 @@ resplit_data = False  # DO NOT TOUCH
 # Train information
 test_model_name = "model_URM_all"  # use different name when training with different parameters
 test_model_name_elastic = "model_URM_all"  # Change only if retrain in train test ElasticNet, otherwise don't touch here
-retrain = True  # to use in case of change in default parameters of each recommender class
+retrain = False  # to use in case of change in default parameters of each recommender class
 split_n = 0
 
 # Evaluation
@@ -35,14 +35,14 @@ tuning_log_name = "weights_seek_2randararys"
 # Output generation
 use_URM_all = True
 create_output = True
-output_file_name = "07_01_hyperTuna"
+output_file_name = "08_01_hyperTuned3"
 
-ItemCFKNN_weight = 1.972219
-RP3beta_weight = 1.895996
-SLIMElasticNet_weight = 1.867328
-ItemCBF_weight = 1.917049
-UserCFKNN_weight = 0.027272
-SLIMCython_weight = 1.762119
+SLIMElasticNet_weight = 1.50570911
+ItemCBF_weight = 2.35976293
+ItemCFKNN_weight = 2.49407224
+RP3beta_weight = 2.48611247
+SLIMCython_weight = 0.80268875
+UserCFKNN_weight = 0.04532348
 
 URM_train, URM_test = load_data_split(split_number=split_n)
 URM_all = load_URM_all()
@@ -83,9 +83,9 @@ if retrain:
     RP3beta.fit(alpha=0.41417, beta=0.04995, min_rating=0, topK=54)
     RP3beta.save_model(name=test_model_name)
 
-    # SLIMElasticNet.load_model(name=test_model_name_elastic)
-    SLIMElasticNet.fit(l1_ratio=0.1, alpha=1e-4, topK=100)
-    SLIMElasticNet.save_model(name=test_model_name)
+    SLIMElasticNet.load_model(name=test_model_name_elastic)
+    # SLIMElasticNet.fit(l1_ratio=0.1, alpha=1e-4, topK=100)
+    # SLIMElasticNet.save_model(name=test_model_name)
 
     ItemCBF.fit(topK=5, shrink=112, similarity='cosine', normalize=True)
     ItemCBF.save_model(name=test_model_name)

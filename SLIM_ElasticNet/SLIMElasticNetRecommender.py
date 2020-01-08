@@ -47,7 +47,7 @@ class SLIMElasticNetRecommender(BaseItemSimilarityMatrixRecommender):
         self.topK = topK
 
         # Display ConvergenceWarning only once and not for every item it occurs
-        warnings.simplefilter("once", category = ConvergenceWarning)
+        warnings.simplefilter("once", category=ConvergenceWarning)
 
         # initialize the ElasticNet model
         self.model = ElasticNet(alpha=alpha,
