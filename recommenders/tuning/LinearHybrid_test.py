@@ -12,6 +12,7 @@ from Base.Evaluation.Evaluator import EvaluatorHoldout
 from Notebooks_utils.data_splitter import train_test_holdout
 
 from DataUtils.ouputGenerator import create_output_coldUsers_Age
+from recommenders.output.cold_finder import find_cold_in_output
 
 import numpy as np
 
@@ -19,8 +20,8 @@ import numpy as np
 resplit_data = False  # DO NOT TOUCH
 
 # Train information
-test_model_name = "model_URM_all"  # use different name when training with different parameters
-test_model_name_elastic = "model_URM_all"  # Change only if retrain in train test ElasticNet, otherwise don't touch here
+test_model_name = "new_split_fun"  # use different name when training with different parameters
+test_model_name_elastic = "new_split_fun"  # Change only if retrain in train test ElasticNet, otherwise don't touch here
 retrain = False  # to use in case of change in default parameters of each recommender class
 split_n = 0
 
@@ -33,16 +34,39 @@ iterations = 10
 tuning_log_name = "weights_seek_2randararys"
 
 # Output generation
+normalize_Scores = True
 use_URM_all = True
 create_output = True
-output_file_name = "08_01_hyperTuned3"
+cbf_on_tails = True
+cbf_tail_length = 3
+output_file_name = "11_01_hyperTuned2_cbf_on_tails"
 
-SLIMElasticNet_weight = 1.50570911
-ItemCBF_weight = 2.35976293
-ItemCFKNN_weight = 2.49407224
-RP3beta_weight = 2.48611247
-SLIMCython_weight = 0.80268875
-UserCFKNN_weight = 0.04532348
+'''
+{'target': 0.04912442739522255,  
+'params': {
+elastic_weight': 0.46804532624957473, 
+'item_cbf_weight': 1.152295146424421, 
+'item_cf_weight': 4.718328516704366, 
+'rp3_weight': 4.838701700476661, 
+'slim_bpr_weight': 0.2696235904011519, 
+'user_cf_weight': 4.7815202122250815
+}} 
+
+
+SLIMElasticNet_weight = 0.46804532624957473
+ItemCBF_weight = 1.152295146424421
+ItemCFKNN_weight = 4.718328516704366
+RP3beta_weight = 4.838701700476661
+SLIMCython_weight = 0.2696235904011519
+UserCFKNN_weight = 4.7815202122250815
+'''
+
+SLIMElasticNet_weight = 2.081129602840116
+ItemCBF_weight = 1.9728545676690088
+ItemCFKNN_weight = 4.428852626906557
+RP3beta_weight = 5.152671308158803
+SLIMCython_weight = 0.41541262709817944
+UserCFKNN_weight = 4.980983458429952
 
 URM_train, URM_test = load_data_split(split_number=split_n)
 URM_all = load_URM_all()
@@ -57,6 +81,7 @@ evaluator = EvaluatorHoldout(URM_test, cutoff_list=[10])
 if use_URM_all:
     print("[LinearHybrid_test] Creating output, training algorithms on URM_all")
     test_model_name_elastic = "model_URM_all"
+    test_model_name = "model_URM_all"
     ItemCFKNN = ItemKNNCFRecommender(URM_all)
     RP3beta = RP3betaRecommender(URM_all)
     SLIMElasticNet = SLIMElasticNetRecommender(URM_all)
@@ -107,10 +132,10 @@ if not retrain:
     SLIMCython.load_model(name=test_model_name)
 
 if use_URM_all:
-    hybrid = LinearHybridRecommender(URM_all, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython)
+    hybrid = LinearHybridRecommender(URM_all, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython, normalize=normalize_Scores)
     hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
 else:
-    hybrid = LinearHybridRecommender(URM_train, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython)
+    hybrid = LinearHybridRecommender(URM_train, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython, normalize=normalize_Scores)
     hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
 
 if evaluate_hybrid:
@@ -121,7 +146,8 @@ if evaluate_hybrid:
     print("MAP result = {}".format(results_dict[10]["MAP"]))
 
 if create_output:
-    create_output_coldUsers_Age(output_name=output_file_name, recommender=hybrid)
+    create_output_coldUsers_Age(output_name=output_file_name, recommender=hybrid, use_cbf_on_tails=cbf_on_tails, cbf_tail_length=cbf_tail_length)
+    find_cold_in_output(output_file_name)
 
 if search_parameters_random:
     high_weights = []

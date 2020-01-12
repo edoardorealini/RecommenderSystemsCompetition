@@ -3,6 +3,8 @@ from Base.BaseSimilarityMatrixRecommender import BaseItemSimilarityMatrixRecomme
 
 import numpy as np
 
+from sklearn import preprocessing
+
 
 class LinearHybridRecommender(BaseItemSimilarityMatrixRecommender):
     """ LinearHybridRecommender
@@ -11,7 +13,7 @@ class LinearHybridRecommender(BaseItemSimilarityMatrixRecommender):
 
     RECOMMENDER_NAME = "LinearHybridRecommender"
 
-    def __init__(self, URM_train, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython):
+    def __init__(self, URM_train, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython, normalize=True):
         super(LinearHybridRecommender, self).__init__(URM_train)
         self.URM_train = check_matrix(URM_train.copy(), 'csr')
 
@@ -21,6 +23,11 @@ class LinearHybridRecommender(BaseItemSimilarityMatrixRecommender):
         self.ItemCBF = ItemCBF
         self.UserCFKNN = UserCFKNN
         self.SLIMCython = SLIMCython
+
+        self.normalize = normalize
+
+        if normalize:
+            print("[LinearHybridRecommender] USING NORMALIZATION ON ITEM SCORES !")
 
         # i think this following line is pretty useless.
         # self.compute_item_score = self.compute_scores_hybrid
@@ -45,12 +52,32 @@ class LinearHybridRecommender(BaseItemSimilarityMatrixRecommender):
         self.SLIMCython_weight = SLIMCython_weight
 
     def _compute_item_score(self, user_id, items_to_compute=None):
+        scores = []
         item_scores_ItemCFKNN = self.ItemCFKNN._compute_item_score(user_id)
+        scores.append(item_scores_ItemCFKNN)
         item_scores_RP3beta = self.RP3beta._compute_item_score(user_id)
+        scores.append(item_scores_RP3beta)
         item_scores_SLIMElasticNet = self.SLIMElasticNet._compute_item_score(user_id)
+        scores.append(item_scores_SLIMElasticNet)
         item_scores_ItemCBF = self.ItemCBF._compute_item_score(user_id)
+        scores.append(item_scores_ItemCBF)
         item_scores_UserCFKNN = self.UserCFKNN._compute_item_score(user_id)
+        scores.append(item_scores_UserCFKNN)
         item_scores_SLIMCython = self.SLIMCython._compute_item_score(user_id)
+        scores.append(item_scores_SLIMCython)
+
+        if self.normalize:
+            norm_scores = []
+
+            for s in scores:
+                norm_scores.append(preprocessing.normalize(s))
+
+            item_scores_ItemCFKNN = norm_scores[0]
+            item_scores_RP3beta = norm_scores[1]
+            item_scores_SLIMElasticNet = norm_scores[2]
+            item_scores_ItemCBF = norm_scores[3]
+            item_scores_UserCFKNN = norm_scores[4]
+            item_scores_SLIMCython = norm_scores[5]
 
         item_scores_weighted = item_scores_ItemCFKNN * self.ItemCFKNN_weight + \
                                item_scores_RP3beta * self.RP3beta_weight + \
