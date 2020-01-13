@@ -11,7 +11,7 @@ from DataUtils.dataLoader import *
 from Base.Evaluation.Evaluator import EvaluatorHoldout
 from Notebooks_utils.data_splitter import train_test_holdout
 
-from DataUtils.ouputGenerator import create_output_coldUsers_Age
+from DataUtils.ouputGenerator import *
 from recommenders.output.cold_finder import find_cold_in_output
 
 import numpy as np
@@ -34,12 +34,18 @@ iterations = 10
 tuning_log_name = "weights_seek_2randararys"
 
 # Output generation
+create_output = True
 normalize_Scores = True
 use_URM_all = True
-create_output = True
-cbf_on_tails = True
+
+cbf_on_tails = False
 cbf_tail_length = 3
-output_file_name = "11_01_hyperTuned2_cbf_on_tails"
+
+ItemCBF_plusWeight = 3.5
+n_interactions = 2  # number of interactions to identify users with (for pseudo cold user)
+
+output_file_name = "13_01_hyperTuned2_pseudoCold"
+
 
 '''
 {'target': 0.04912442739522255,  
@@ -59,6 +65,15 @@ ItemCFKNN_weight = 4.718328516704366
 RP3beta_weight = 4.838701700476661
 SLIMCython_weight = 0.2696235904011519
 UserCFKNN_weight = 4.7815202122250815
+
+elastic_weight=2.096, 
+item_cbf_weight=5.851, 
+item_cf_weight=4.934,                  
+rp3_weight=4.541, 
+slim_weight=1.169, 
+user_cf_weight=0.06014
+
+mf_weight=0.3342, 
 '''
 
 SLIMElasticNet_weight = 2.081129602840116
@@ -132,21 +147,25 @@ if not retrain:
     SLIMCython.load_model(name=test_model_name)
 
 if use_URM_all:
-    hybrid = LinearHybridRecommender(URM_all, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython, normalize=normalize_Scores)
-    hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
+    hybrid_CF = LinearHybridRecommender(URM_all, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython, normalize=normalize_Scores)
+    hybrid_CF.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
+    hybrid_CBF = LinearHybridRecommender(URM_all, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython, normalize=normalize_Scores)
+    hybrid_CBF.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight + ItemCBF_plusWeight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
+
 else:
-    hybrid = LinearHybridRecommender(URM_train, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython, normalize=normalize_Scores)
-    hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
+    hybrid_CF = LinearHybridRecommender(URM_train, ItemCFKNN, RP3beta, SLIMElasticNet, ItemCBF, UserCFKNN, SLIMCython, normalize=normalize_Scores)
+    hybrid_CF.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
 
 if evaluate_hybrid:
     print("[LinearHybrid_test] Evaluating algorithm")
     # evaluate_algorithm_original(URM_test, hybrid, at=10)
 
-    results_dict, results_run_string = evaluator.evaluateRecommender(hybrid)
+    results_dict, results_run_string = evaluator.evaluateRecommender(hybrid_CF)
     print("MAP result = {}".format(results_dict[10]["MAP"]))
 
 if create_output:
-    create_output_coldUsers_Age(output_name=output_file_name, recommender=hybrid, use_cbf_on_tails=cbf_on_tails, cbf_tail_length=cbf_tail_length)
+    # create_output_coldUsers_Age(output_name=output_file_name, recommender=hybrid_CF, use_cbf_on_tails=cbf_on_tails, cbf_tail_length=cbf_tail_length)
+    create_output_superColdMng(output_name=output_file_name, hybrid_CF=hybrid_CF, hybrid_CBF=hybrid_CBF, n_interactions=n_interactions)
     find_cold_in_output(output_file_name)
 
 if search_parameters_random:
@@ -174,8 +193,8 @@ if search_parameters_random:
         file_log.write("\n")
         file_log.write(str(n_iter) + "Fitting with parameters: ItemCFKNN_weight={}, RP3beta_weight={}, SLIMElasticNet_weight={}, ItemCBF_weight={}, UserCFKNN_weight={}, SLIMCython_weight={}"
               .format(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight))
-        hybrid.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
-        dictionary, string = evaluator.evaluateRecommender(hybrid)
+        hybrid_CF.fit(ItemCFKNN_weight, RP3beta_weight, SLIMElasticNet_weight, ItemCBF_weight, UserCFKNN_weight, SLIMCython_weight, retrain_all_algorithms=False)
+        dictionary, string = evaluator.evaluateRecommender(hybrid_CF)
         result = "The MAP result for this tuning is:" + str(dictionary[10]["MAP"])
         print(result)
         file_log.write(result + "\n")

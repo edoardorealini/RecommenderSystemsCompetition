@@ -167,8 +167,19 @@ def create_output_coldUsers_Age(output_name, recommender, use_cbf_on_tails=False
 # This values is needed to select only the users that have less than n_interactions- interactions
 def get_pseudoCold_users(n_interactions=2):
     pseudo_cold = []
+    file = open("C:/Users/Utente/Desktop/RecSys-Competition-2019/DataUtils/data/competition/users/interactions_per_user.txt")
 
-    #TODO
+    user_id = 0
+    pseudo_cold_users = []
+    file.seek(0)
+    for line in file:
+        line.replace("\n", "")
+        itr = int(line)
+
+        if itr <= n_interactions and itr != 0:
+            pseudo_cold.append(user_id)
+
+        user_id += 1
 
     return pseudo_cold
 
@@ -182,8 +193,9 @@ With this following function we want to distinguish between 3 different categori
     A user is considered Pseudo Cold User if he has only 1 or 2 interactions in the whole dataset. 
 '''
 
-def create_output_superColdMng(output_name, hybrid_CF, hybrid_CBF):
+def create_output_superColdMng(output_name, hybrid_CF, hybrid_CBF, n_interactions):
     coldUserList = getColdUsers()
+    pseudo_cold_list = get_pseudoCold_users(n_interactions)
 
     path = "C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/output/" + output_name + ".csv"
     output = open(path, 'w')
@@ -198,6 +210,9 @@ def create_output_superColdMng(output_name, hybrid_CF, hybrid_CBF):
     for user in tqdm(getUserList_forOutput()):
         if user in coldUserList:
             recommended_items = recommendTopPopOnAge(getUserAge(user))
+
+        elif user in pseudo_cold_list:
+            recommended_items = hybrid_CBF.recommend(user)[0:10]
 
         else:
             recommended_items = hybrid_CF.recommend(user)[0:10]
