@@ -1,0 +1,33 @@
+ItemKNNCF: topK= 39, shrink= 28, normalize=True, similarity="jaccard"
+MAP = 0.04542248416472833
+
+UserKNNCF: topK= 601, shrink= 0.18, normalize=True, similarity="cosine"
+MAP = 0.037152693428015124
+
+ItemKNNCBF: topK= 114, shrink= 44, , normalize=True, similarity="cosine"
+MAP = 
+
+RP3beta: alpha=0.41, beta=0.049, min_rating=0, topK= 44 , normalize_similarity=True 
+MAP = 0.04748406510901377
+
+SLIMElastic: l1_ratio=0.1, alpha=1e-4, topK_std=100, positive_only=True
+MAP = 
+
+SLIMCython: epochs=500, topK=200
+ MAP = 0.03884819865304696
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PARAMS BY ADRIANO:
+
+ItemCF -> top_k=10, shrink=30.0, normalize=True, similarity="jaccard", MAP = 0.046540
+
+UserCF -> top_k=600, shrink=0.0, normalize=True, similarity="cosine", MAP = 0.038482
+
+ItemCBF -> top_k=5, shrink=112.2, normalize=True, similarity="cosine", MAP = 0.013663
+
+RP3beta -> alpha=0.41417, beta=0.04995, top_k=54, min_rating=0, implicit=True, normalize_similarity=True. MAP = 0.047024
+
+ElasticNet -> l1_ratio=0.1, positive_only=True, top_k=100, alpha=tol=1e-4, MAP = MAP = 0.039746
+
+SlimCython -> epochs = 200, topk=10, MAP = MAP = 0.040947

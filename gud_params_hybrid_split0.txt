@@ -1,0 +1,157 @@
+All these results are obtained on split 0 !
+Try to work on this shit
+Online on kaggle this shit gave 0.03442
+
+[ColdFinder] In file ItemKNNCFRecommender_output we found a total of = 238 cold items
+[ColdFinder] In file RP3betaRecommender_output we found a total of = 785 cold items
+[ColdFinder] In file SLIMElasticNetRecommender_output we found a total of = 26 cold items
+[ColdFinder] In file ItemKNNCBFRecommender_output we found a total of = 59904 cold items
+[ColdFinder] In file UserKNNCFRecommender_output we found a total of = 16 cold items
+[ColdFinder] In file SLIM_BPR_Recommender_output we found a total of = 873 cold items
+
+
+ssh edoardorealini@51.144.141.82
+
+[{'target': 0.05047380993047588, 
+
+'params': {
+
+	'elastic_weight': 1.8794681353187226, 
+	'item_cbf_weight': 2.181326545697422, 
+	'item_cf_weight': 2.083090342183156, 
+	'rp3_weight': 2.1186628446486546, 
+	'slim_bpr_weight': 1.5672985721248878, 
+	'user_cf_weight': 0.06903239985794099
+
+}},
+
+Il seguente ha ottenuto 0.03469 su kaggle, migliorare da qui ancora su split 0.
+
+{'target': 0.050931487561873635, 
+'params': {
+'elastic_weight': 1.490451789170178, 
+'item_cbf_weight': 2.368454083366885, 
+'item_cf_weight': 2.4344894550428946, 
+'rp3_weight': 2.4193834232525786, 
+'slim_bpr_weight': 1.0194312719303567, 
+'user_cf_weight': 0.057296907734475926
+}}
+
+Il seguente settinga ha ottenuto 0.03477 su Kaggle, ancora trovato con split 0:
+
+'target': 0.05111439483246449, 
+'params': {
+'elastic_weight': 1.5057091147221149, 
+'item_cbf_weight': 2.3597629331098107, 
+'item_cf_weight': 2.4940722407328875, 
+'rp3_weight': 2.4861124726537556, 
+'slim_bpr_weight': 0.8026887480999276, 
+'user_cf_weight': 0.04532347839969097
+}}
+
+Il seguente fa 0.03520 su Kaggle, NORMALIZATION ON:
+
+{'target': 0.050988957854450394, 
+'params': {
+'elastic_weight': 2.081129602840116, 
+'item_cbf_weight': 1.9728545676690088, 
+'item_cf_weight': 4.428852626906557, 
+'rp3_weight': 5.152671308158803, 
+'slim_bpr_weight': 0.41541262709817944, 
+'user_cf_weight': 4.980983458429952
+}} 
+
+Il seguente fa cacare, in locale è meglio ma su kaggle peggiora:
+Trovato con NORMALIZE = True
+{'target': 0.05102882786666819, 
+'params': {
+'elastic_weight': 2.0926017938752297, 
+'item_cbf_weight': 1.9345893446451305, 
+'item_cf_weight': 4.310016111416886, 
+'rp3_weight': 5.021675491698088, 
+'slim_bpr_weight': 0.47766377388757236, 
+'user_cf_weight': 4.995933714695856
+}}
+
+Obiettivo, superare 0.051131590391193214 sullo split 0 in locale!
+Direi anche che arrivare a 0.052 sarebbe bello.
+
+DA PROVARE:
+
+Split 3, normalize = True
+{'target': 0.0490829262715523, 
+'params': {
+'elastic_weight': 0.24655518589568493, 
+'item_cbf_weight': 1.2144352997533674, 
+'item_cf_weight': 4.812557253311179, 
+'rp3_weight': 4.910319358086533, 
+'slim_bpr_weight': 0.1418618154768081, 
+'user_cf_weight': 4.908437544177401
+}}
+
+
+
+
+
+
+OLD WITH NO NORMALIZATION!
+{'target': 0.051131590391193214, 
+'params': {
+'elastic_weight': 1.5013156499943205, 
+'item_cbf_weight': 2.376690040281708, 
+'item_cf_weight': 2.4892973553087647, 
+'rp3_weight': 2.445213278131394, 
+'slim_bpr_weight': 0.737970648262643, 
+'user_cf_weight': 0.045967121641994395
+}}
+
+{'target': 0.05104784537280857, 
+'params': {'elastic_weight': 1.5136368612001692, 
+'item_cbf_weight': 2.3589509101867048, 
+'item_cf_weight': 2.4855863582296704, 
+'rp3_weight': 2.4186219260307227, 
+'slim_bpr_weight': 0.9056519352239866, 
+'user_cf_weight': 0.03728525888211734
+}}
+
+Veersione migliorata di quello già caricato
+{'target': 0.05082377933591637, 
+'params': 
+{'elastic_weight': 1.4579116379569188, 
+'item_cbf_weight': 1.6053844550647363, 
+'item_cf_weight': 2.2994755821894657, 
+'rp3_weight': 1.9175124409618722, 
+'slim_bpr_weight': 0.9110453921725985, 
+'user_cf_weight': 0.053411420715093305}}
+
+
+{'target': 0.050818561880594665, 
+'params': {
+'elastic_weight': 1.5642986414620892, 
+'item_cbf_weight': 1.5670339016403207, 
+'item_cf_weight': 2.300035770357756, 
+'rp3_weight': 1.9514613899022675, 
+'slim_bpr_weight': 1.0098155084129252, 
+'user_cf_weight': 0.0460545662587796
+}}
+
+Target = 0.05081
+ItemCFKNN_weight=2.463676332107973 
+RP3beta_weight=2.398992984217717 
+SLIMElasticNet_weight=1.5230104040439185 
+ItemCBF_weight=2.465658076707211 
+SLIMCython_weight=1.00581444528135                                                              
+UserCFKNN_weight=0.016411256295697802 
+
+
+}}, {'target': 0.04975975146650314, 
+'params': {
+
+	'elastic_weight': 1.699344707461021, 
+	'item_cbf_weight': 2.140191155666628, 
+	'item_cf_weight': 1.9398353796735113, 
+	'rp3_weight': 2.145898002533296, 
+	'slim_bpr_weight': 1.5440859864907186, 
+	'user_cf_weight': 0.06074899098321048
+
+}}]
