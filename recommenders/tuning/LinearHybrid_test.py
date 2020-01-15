@@ -41,10 +41,10 @@ use_URM_all = True
 cbf_on_tails = False
 cbf_tail_length = 3
 
-ItemCBF_plusWeight = 3.5
+ItemCBF_plusWeight = 8.5
 n_interactions = 2  # number of interactions to identify users with (for pseudo cold user)
 
-output_file_name = "13_01_hyperTuned2_pseudoCold"
+output_file_name = "15_01_hyperTuned2_pseudoCold+8.5"
 
 
 '''
@@ -74,6 +74,13 @@ slim_weight=1.169,
 user_cf_weight=0.06014
 
 mf_weight=0.3342, 
+
+SLIMElasticNet_weight = 2.081129602840116
+ItemCBF_weight = 1.9728545676690088
+ItemCFKNN_weight = 4.428852626906557
+RP3beta_weight = 5.152671308158803
+SLIMCython_weight = 0.41541262709817944
+UserCFKNN_weight = 4.980983458429952
 '''
 
 SLIMElasticNet_weight = 2.081129602840116
@@ -123,9 +130,9 @@ if retrain:
     RP3beta.fit(alpha=0.41417, beta=0.04995, min_rating=0, topK=54)
     RP3beta.save_model(name=test_model_name)
 
-    SLIMElasticNet.load_model(name=test_model_name_elastic)
-    # SLIMElasticNet.fit(l1_ratio=0.1, alpha=1e-4, topK=100)
-    # SLIMElasticNet.save_model(name=test_model_name)
+    # SLIMElasticNet.load_model(name=test_model_name_elastic)
+    SLIMElasticNet.fit(l1_ratio=0.1, alpha=1e-4, topK=100)
+    SLIMElasticNet.save_model(name=test_model_name)
 
     ItemCBF.fit(topK=5, shrink=112, similarity='cosine', normalize=True)
     ItemCBF.save_model(name=test_model_name)
@@ -141,7 +148,7 @@ if not retrain:
     print("[LinearHybrid_test] Loading trained models from file, faster approach")
     ItemCFKNN.load_model(name=test_model_name)
     RP3beta.load_model(name=test_model_name)
-    SLIMElasticNet.load_model(name=test_model_name_elastic)
+    SLIMElasticNet.load_model(name=test_model_name)
     ItemCBF.load_model(name=test_model_name)
     UserCFKNN.load_model(name=test_model_name)
     SLIMCython.load_model(name=test_model_name)

@@ -62,6 +62,7 @@ for line in ICM_price_file:
 ICM_all = icm_all_builder(urm_all, ICM_asset_tuples, ICM_price_tuples, ICM_subclass_tuples)
 
 sps.save_npz('data/competition/sparse_ICM.npz', ICM_all, compressed=True)
+sps.save_npz('C:/Users/Utente/Desktop/RecSys-Competition-2019/recommenders/data/competition/sparse_ICM.npz', ICM_all, compressed=True)
 print("Matrix saved in sparse_ICM.npz")
 
 #from DataUtils.ICM_exploration import makeICMStats

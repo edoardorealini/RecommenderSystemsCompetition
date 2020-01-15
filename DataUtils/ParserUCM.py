@@ -9,27 +9,28 @@ def ucm_all_builder(urm_all, ucm_age_tuples, ucm_region_tuples, ucm_interactions
     row_interactions, column_interactions, data_interactions = zip(*ucm_interactions_tuples)
 
     le_age = preprocessing.LabelEncoder()
-    le_age.fit(data_age)
-    data_age = le_age.transform(data_age)
+    le_age.fit(column_age)
+    column_age = le_age.transform(column_age)
 
     le_region = preprocessing.LabelEncoder()
-    le_region.fit(data_region)
-    data_region = le_region.transform(data_region)
+    le_region.fit(column_region)
+    column_region = le_region.transform(column_region)
+
+    le_interactions = preprocessing.LabelEncoder()
+    le_interactions.fit(column_interactions)
+    column_interactions = le_interactions.transform(column_interactions)
 
     n_users = urm_all.shape[0]
-    n_features_ucm_age = max(data_age) + 1
-    n_features_ucm_region = max(data_region) + 1
+    n_features_ucm_age = max(column_age) + 1
+    n_features_ucm_region = max(column_region) + 1
     n_features_ucm_interactions = max(column_interactions) + 1
 
     ucm_age_shape = (n_users, n_features_ucm_age)
     ucm_region_shape = (n_users, n_features_ucm_region)
     ucm_interactions_shape = (n_users, n_features_ucm_interactions)
 
-    ones_ucm_age = np.ones(len(data_age))
-    ones_ucm_region = np.ones(len(data_region))
-
-    ucm_age = sps.coo_matrix((ones_ucm_age, (row_age, data_age)), shape=ucm_age_shape)
-    ucm_region = sps.coo_matrix((ones_ucm_region, (row_region, data_region)), shape=ucm_region_shape)
+    ucm_age = sps.coo_matrix((data_age, (row_age, column_age)), shape=ucm_age_shape)
+    ucm_region = sps.coo_matrix((data_region, (row_region, column_region)), shape=ucm_region_shape)
     ucm_interactions = sps.coo_matrix((data_interactions, (row_interactions, column_interactions)), shape=ucm_interactions_shape)
 
     ucm_all = sps.hstack((ucm_age, ucm_region))

@@ -1,7 +1,6 @@
 from DataUtils.ouputGenerator import *
 
 
-
 file = open("C:/Users/Utente/Desktop/RecSys-Competition-2019/DataUtils/data/competition/users/interactions_per_user.txt")
 
 for interactions in range(100):

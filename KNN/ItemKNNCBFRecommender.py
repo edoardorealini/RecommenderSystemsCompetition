@@ -31,7 +31,7 @@ class ItemKNNCBFRecommender(BaseItemSimilarityMatrixRecommender):
 
 
     def fit(self, topK=50, shrink=100, similarity='cosine', normalize=True, feature_weighting = "none", **similarity_args):
-
+        print("[ItemCBF] Fitting model")
         self.topK = topK
         self.shrink = shrink
 

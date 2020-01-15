@@ -5,7 +5,7 @@ from DataUtils.dataLoader import *
 import re
 
 urm_all = load_URM_all()
-output = "08_01_hyperTuned3"
+output = "14_01_hyperTuned1_pseudoCold"
 
 
 def load_sample(file_name):
@@ -32,6 +32,17 @@ def find_cold_in_output(file_name):
     cold_items = list(np.where(item_pop == 0)[0])
     print(len(cold_items))
 
+    '''
+    print(cold_items)
+
+    items = [4785, 1023, 4487, 5133, 5144, 4779, 4784, 4480, 16840, 4179]
+
+    for i in items:
+        if i in cold_items:
+            print( str(i) + "is cold")
+            
+    '''
+
     z = Counter(flattened)
     tot = 0
     for item in cold_items:
@@ -44,4 +55,4 @@ def find_cold_in_output(file_name):
     print("[ColdFinder] In file " + file_name + " we found a total of = {} cold items".format(tot))
 
 
-# find_cold_in_output(output)
+find_cold_in_output(output)

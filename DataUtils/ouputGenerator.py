@@ -183,7 +183,7 @@ def get_pseudoCold_users(n_interactions=2):
 
     return pseudo_cold
 
-
+print(get_pseudoCold_users(2))
 '''
 With this following function we want to distinguish between 3 different categories of users:
     - Cold Users:           Using TOP POP clustered on age

@@ -28,6 +28,15 @@ def icm_all_builder(urm_all, icm_asset_tuples, icm_price_tuples, icm_sub_class_t
     ones_icm_asset = np.ones(len(data_asset))
     ones_icm_price = np.ones(len(data_price))
 
+    data_sub_class = list(data_sub_class)
+    print(data_sub_class)
+    data_sub_class = np.array(data_sub_class)
+    print(data_sub_class)
+
+    ones_icm_asset = ones_icm_asset * 0.9
+    ones_icm_price = ones_icm_price * 0.7
+    data_sub_class = data_sub_class * 1.1
+
     icm_asset = sps.coo_matrix((ones_icm_asset, (row_asset, data_asset)), shape=icm_asset_shape)
     icm_price = sps.coo_matrix((ones_icm_price, (row_price, data_price)), shape=icm_price_shape)
     icm_sub_class = sps.coo_matrix((data_sub_class, (row_sub_class, column_sub_class)), shape=icm_sub_class_shape)
@@ -35,5 +44,7 @@ def icm_all_builder(urm_all, icm_asset_tuples, icm_price_tuples, icm_sub_class_t
     icm_all = sps.hstack((icm_asset, icm_price))
     icm_all = sps.hstack((icm_all, icm_sub_class))
     icm_all = icm_all.tocsr()
+
+    print(icm_all[0])
 
     return icm_all
